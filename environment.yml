@@ -1,0 +1,9 @@
+name: geometry
+channels:
+  - defaults
+dependencies:
+  - python=3.11.3
+  - pygame
+  - pymunk
+  - numpy
+prefix: C:\Users\OutwardFire\anaconda3\envs\project_newton
