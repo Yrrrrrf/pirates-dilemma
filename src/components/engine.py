@@ -1,17 +1,7 @@
-import sys
-import pygame
 from dataclasses import dataclass
-import random
+import pygame
 
-
-class Tree(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        super().__init__()
-
-        self.image: pygame.Surface = pygame.image.load(f"assets/images/static/tree-{random.randint(1, 5):02d}.png").convert_alpha()
-        self.image: pygame.Surface = pygame.transform.scale(self.image, (128, 128))
-        self.rect: pygame.Rect = self.image.get_rect(topleft=(x, y))
-
+from components.world import World
 
 @dataclass
 class Engine:
@@ -21,25 +11,13 @@ class Engine:
     def __init__(self):
         """Initialize the app"""
         self.display_surface: pygame.Surface = pygame.display.get_surface()
-
-
-        w, h = self.display_surface.get_size()
-        trees = pygame.sprite.Group([Tree(random.randint(0, w), random.randint(0, h)) for _ in range(20)])
-
-        # add the trees to the display surface
-        trees.draw(self.display_surface)
-
-        
-
-
-
-
+        self.world: World = World()
 
     def event_loop(self):
         for event in pygame.event.get():  # get all events
-            if event.type == pygame.QUIT:  # if the user closes the window
-                pygame.quit()  # quit pygame
-                sys.exit()  # exit the program
+            match event.type:
+                case pygame.K_0: print("0")
+
 
     def run(self, dt: float) -> None:
         """
@@ -48,7 +26,9 @@ class Engine:
         ### Parameters:
             dt (float): time in seconds since the last tick
         """
-        # print("Running the G-Engine")
-        self.event_loop()  # handle events
+        # recolor the display surface
+        self.display_surface.fill((0, 0, 0))
 
-        # self.display_surface.fill('blue')
+        self.event_loop()  # * Handle events
+        self.world.update(dt)
+        self.world.draw(self.display_surface)
