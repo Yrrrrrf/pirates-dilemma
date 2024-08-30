@@ -1,82 +1,54 @@
-from dataclasses import dataclass, field
-from typing import Optional
+from pydantic import BaseModel, Field
 import pygame
 
-# Own imports
-from globals import GameInfo, Assets, game_state
-from components.editor import Editor
+from constants import GameInfo
+from components.game_state import GameState
+from utils.resource_loader import AssetManager
 from components.engine import Engine
 
-@dataclass
-class App:
-    """
-    This class contains the main logic for the application GUI and game loop.
-    """
-    display_surface: pygame.Surface = field(init=False)
-    running: bool = True
-    editor: Optional[Editor] = None
+class App(BaseModel):
+    display_surface: pygame.Surface = Field(default=None)
+    running: bool = Field(default=True)
+    engine: Engine = Field(default=None)
+    clock: pygame.time.Clock = Field(default_factory=pygame.time.Clock)
 
-    def __init__(self):
-        """Initialize the app"""
+    class Config:
+        arbitrary_types_allowed = True
+
+    def __init__(self, **data):
+        super().__init__(**data)
         pygame.init()
+
+        pygame.display.set_caption(f"{GameInfo.NAME} {GameInfo.VERSION}")
+        pygame.display.set_icon(pygame.image.load(AssetManager.get_image("pirate-hat.png")))
+
+        # Initialize game state and engine
+        game_state = GameState()
         self.display_surface = pygame.display.set_mode(
-            (game_state.settings.width, game_state.settings.height),
-            pygame.RESIZABLE
+            game_state.settings.get_screen_size(), pygame.RESIZABLE
         )
-        pygame.display.set_caption(f"{GameInfo.name} {GameInfo.version}")
-        pygame.display.set_icon(pygame.image.load(f"{Assets.images}pirate-hat.png"))
+        
+        # Create and initialize the engine
+        self.engine = Engine(game_state=game_state)
+        self.engine.initialize_display(self.display_surface)
+
         print(f"\033[94mApp Running\033[0m")
 
-        self.clock: pygame.time.Clock = pygame.time.Clock()
-
-        self.editor: Editor = Editor()
-        self.engine: Engine = Engine()
-
-        # Uncomment and modify the following lines if you want to set the window always on top
-        # if sys.platform == "win32":
-        #     import win32gui, win32con
-        #     hwnd = win32gui.GetForegroundWindow()
-        #     win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
-        #                           win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
-
     def handle_events(self) -> None:
-        """Handle pygame events"""
         for event in pygame.event.get():
-            match event.type:
-                case pygame.QUIT: self.running = False
-                case pygame.VIDEORESIZE:
-                    self.display_surface = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-                    game_state.update_settings(width=event.w, height=event.h)
-                case pygame.KEYDOWN:
-                    match event.key:
-                        case pygame.K_ESCAPE: self.running = False
-                        case pygame.K_F1:  # * F1 to toggle editor mode
-                            print("Impl: F1 to toggle editor mode")
-                            # match self.editor:
-                            #     case None: self.editor = Editor()
-                            #     case _: self.editor = None
-            # todo: Add the editor event handling
-            # todo: Also add the engine event handling
-            # self.editor.handle_events(event)
-
-
-    # def update(self, dt: float):
-    #     """
-    #     Update game state
-    #     """
-    #     if self.editor:
-    #         self.editor.run(dt)
-    #     # Add more update logic as needed
+            if event.type == pygame.QUIT:
+                self.running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False
+                elif event.key == pygame.K_F1:
+                    print("Impl: F1 to toggle editor mode")
 
     def run(self) -> None:
-        """Main game loop"""
         while self.running:
-            dt: float = self.clock.tick(game_state.settings.fps) / 1000.0  # get seconds since last tick
-            self.handle_events()  # handle events
+            dt: float = self.clock.tick(self.engine.game_state.settings.fps) / 1000.0
+            self.handle_events()
+            self.engine.run(dt)
+            pygame.display.update()
 
-            # self.editor.run(dt)  # update game state
-            self.engine.run(dt)  # update game state
-
-            pygame.display.update()  # * render game (draw everything)
-
-        pygame.quit()  # quit pygame when the loop ends (when self.running is False)
+        pygame.quit()
