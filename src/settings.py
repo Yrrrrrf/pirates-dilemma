@@ -14,7 +14,7 @@ class Language(Enum):
     # PORTUGUESE: str = "pt"
     # RUSSIAN: str = "ru"
 
-class GameSettings(BaseModel):
+class Settings(BaseModel):
     """Represents the adjustable settings of the game."""
     language: Language = Field(default=Language.SPANISH)
     width: int = Field(default=1080, ge=640, le=3840)

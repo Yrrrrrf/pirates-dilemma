@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import Tuple
 
-from settings import GameSettings
+from settings import Settings
 from constants import Themes, Theme
 
 
 class GameState(BaseModel):
-    settings: GameSettings = Field(default_factory=GameSettings)
+    settings: Settings = Field(default_factory=Settings)
     current_theme: Theme = Field(default=Themes.DARK.value)
 
     def get_screen_size(self) -> Tuple[int, int]:
