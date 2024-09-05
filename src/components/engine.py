@@ -1,14 +1,11 @@
 from pydantic import BaseModel, Field
 import pygame
-from typing import Callable, Optional
+from typing import Optional
 
-from components.game_state import GameState
 from components.world.world_manager import WorldManager
 from components.rendering.camera import Camera
-from utils.resource_loader import AssetManager
 
 class Engine(BaseModel):
-    game_state: GameState = Field(default_factory=GameState)
     display_surface: Optional[pygame.Surface] = Field(default=None)
     world_manager: WorldManager = Field(default_factory=WorldManager)
     clock: pygame.time.Clock = Field(default_factory=pygame.time.Clock)
@@ -20,10 +17,10 @@ class Engine(BaseModel):
     def initialize_display(self, surface: pygame.Surface):
         self.display_surface = surface
 
-        world_size = (10, 20)  # blocks
-        tile_size = self.game_state.settings.tile_size  # pixels
-        self.world_manager.create_world("main", world_size, tile_size)
-        self.world_manager.set_water_row(1)
+        # * Create the main world
+        self.world_manager.create_world("main", 'some-map.tmx')
+        # self.world_manager.create_world("main")
+        # self.world_manager.set_water_row(1)  # * set a default row for the water
 
     def event_loop(self):
         for event in pygame.event.get():
@@ -36,8 +33,10 @@ class Engine(BaseModel):
     # todo: Move this fn to the camera class
     def handle_input(self):
         keys = pygame.key.get_pressed()  # Get the state of all keys
+        
         # d: Callable = lambda k1, k2: keys[k1] - keys[k2]
         # self.camera.move(d(pygame.K_d, pygame.K_a), d(pygame.K_s, pygame.K_w))
+        
         # * Same as above w/ a more readable format (commented out for reference)
         dx = keys[pygame.K_d] - keys[pygame.K_a]
         dy = keys[pygame.K_s] - keys[pygame.K_w]
@@ -51,14 +50,27 @@ class Engine(BaseModel):
         self.world_manager.update(dt)
 
         self.display_surface.fill((0, 0, 0))  # Clear the screen
-        self.world_manager.draw(self.display_surface, self.camera)
         
+        # Draw the world
+        current_world = self.world_manager.worlds.get(self.world_manager.current_world)
+        if current_world:
+            current_world.draw(self.display_surface, self.camera)
+        
+        # Draw camera position for debugging
+        debug_font = pygame.font.Font(None, 24)
+        camera_pos = debug_font.render(f"Camera: ({int(self.camera.position.x)}, {int(self.camera.position.y)})", True, (255, 255, 255))
+        self.display_surface.blit(camera_pos, (10, 70))
+
+        self.camera.draw_fps(self.display_surface, dt)
+
         pygame.display.flip()
 
-        # pygame.quit()
+    def handle_input(self):
+        keys = pygame.key.get_pressed()
+        dx = keys[pygame.K_d] - keys[pygame.K_a]
+        dy = keys[pygame.K_s] - keys[pygame.K_w]
+        self.camera.move(dx, dy)
 
-    def draw_debug_info(self) -> None:
-        if self.display_surface is None:
-            return
-        font = pygame.font.Font(None, 30)
-        # Add debug info drawing logic here
+        # Add a key to reset camera position
+        if keys[pygame.K_r]:
+            self.camera.reset_position()

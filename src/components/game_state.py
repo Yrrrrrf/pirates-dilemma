@@ -5,7 +5,7 @@ from settings import Settings
 from constants import Themes, Theme
 
 
-class GameState(BaseModel):
+class AppData(BaseModel):
     settings: Settings = Field(default_factory=Settings)
     current_theme: Theme = Field(default=Themes.DARK.value)
 
@@ -19,3 +19,6 @@ class GameState(BaseModel):
 
 # game_state = GameState()
 # print(game_state.model_dump_json())  # Easily serialize to JSON
+
+# * Create an instance of the AppData model
+app_data = AppData()

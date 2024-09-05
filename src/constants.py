@@ -29,21 +29,21 @@ class Themes(Enum):
         main_color=(255, 255, 255),
         secondary_color=(191, 191, 191),
         highlight_color=(255, 0, 0),
-        font=AssetManager.get_font("Roboto-Regular.ttf")
+        font=AssetManager.get_font_abs("Roboto-Regular.ttf")
     )
     DARK = Theme(
         name="Dark Theme",
         main_color=(0, 0, 0),
         secondary_color=(63, 63, 63),
         highlight_color=(255, 0, 0),
-        font=AssetManager.get_font("Roboto-Regular.ttf")
+        font=AssetManager.get_font_abs("Roboto-Regular.ttf")
     )
     DARK_PLUS = Theme(
         name="Dark+ Theme",
         main_color=(0, 0, 0),
         secondary_color=(31, 31, 31),
         highlight_color=(255, 0, 0),
-        font=AssetManager.get_font("Roboto-Regular.ttf")
+        font=AssetManager.get_font_abs("Roboto-Regular.ttf")
     )
     DEBUG = Theme(
         name="Debug Theme",

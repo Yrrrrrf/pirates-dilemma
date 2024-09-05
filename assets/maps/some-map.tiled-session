@@ -1,0 +1,37 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "some-map.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "some-map.tmx": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 944.3333333333333,
+                "y": 134.66666666666669
+            }
+        },
+        "terrain_tiles_v2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        }
+    },
+    "last.imagePath": "C:/Users/fire/Documents/programming/python/pirates-dilemma/assets/images/static/basic_tileset_and_assets_32x32_standard_v2/basic_tileset_and_assets_standard",
+    "map.height": 64,
+    "map.lastUsedFormat": "tmx",
+    "map.width": 64,
+    "openFiles": [
+        "some-map.tmx",
+        "terrain_tiles_v2.tsx"
+    ],
+    "project": "some-map.tiled-project",
+    "recentFiles": [
+        "terrain_tiles_v2.tsx",
+        "some-map.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}

@@ -43,9 +43,15 @@ from typing import Tuple
 class Camera(BaseModel):
     position: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
     speed: float = 5.0
+    font: pygame.font.Font = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        pygame.font.init()
+        self.font = pygame.font.Font(None, 36)
 
     def move(self, dx: float, dy: float):
         self.position.x += dx * self.speed
@@ -56,3 +62,11 @@ class Camera(BaseModel):
 
     def apply(self, target_rect: pygame.Rect) -> pygame.Rect:
         return target_rect.move(self.get_offset())
+
+    def draw_fps(self, surface: pygame.Surface, dt: float) -> None:
+        fps = self.font.render(f"FPS: {int(1 / dt)}", True, (255, 255, 255))
+        surface.blit(fps, (10, 10))
+
+    # New method to reset camera position
+    def reset_position(self):
+        self.position = pygame.math.Vector2(0, 0)
