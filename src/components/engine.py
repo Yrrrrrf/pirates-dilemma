@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 import pygame
 from typing import Optional
 
+from components.world.world import World
 from components.world.world_manager import WorldManager
 from components.rendering.camera import Camera
 
@@ -45,25 +46,20 @@ class Engine(BaseModel):
     def run(self, dt: float) -> None:
         if self.display_surface is None or self.world_manager is None:
             raise ValueError("Display surface or WorldManager not initialized. Call initialize_display() first.")
-        
+    
         self.handle_input()
         self.world_manager.update(dt)
 
         self.display_surface.fill((0, 0, 0))  # Clear the screen
         
-        # Draw the world
-        current_world = self.world_manager.worlds.get(self.world_manager.current_world)
-        if current_world:
-            current_world.draw(self.display_surface, self.camera)
-        
-        # Draw camera position for debugging
-        debug_font = pygame.font.Font(None, 24)
-        camera_pos = debug_font.render(f"Camera: ({int(self.camera.position.x)}, {int(self.camera.position.y)})", True, (255, 255, 255))
-        self.display_surface.blit(camera_pos, (10, 70))
+        # * Draw the world
+        current_world: World = self.world_manager.worlds.get(self.world_manager.current_world)
+        if current_world: current_world.draw(self.display_surface, self.camera)
 
-        self.camera.draw_fps(self.display_surface, dt)
+        # * Draw debug info (fps, camera position, map size, etc.)
+        self.world_manager.draw_debug_info(self.display_surface, self.camera, current_world, dt)
 
-        pygame.display.flip()
+        pygame.display.flip()  # Update the display (flip the buffer)
 
     def handle_input(self):
         keys = pygame.key.get_pressed()
@@ -72,5 +68,4 @@ class Engine(BaseModel):
         self.camera.move(dx, dy)
 
         # Add a key to reset camera position
-        if keys[pygame.K_r]:
-            self.camera.reset_position()
+        if keys[pygame.K_r]: self.camera.reset_position()

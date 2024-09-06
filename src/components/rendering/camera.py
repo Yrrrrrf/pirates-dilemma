@@ -63,10 +63,6 @@ class Camera(BaseModel):
     def apply(self, target_rect: pygame.Rect) -> pygame.Rect:
         return target_rect.move(self.get_offset())
 
-    def draw_fps(self, surface: pygame.Surface, dt: float) -> None:
-        fps = self.font.render(f"FPS: {int(1 / dt)}", True, (255, 255, 255))
-        surface.blit(fps, (10, 10))
-
     # New method to reset camera position
     def reset_position(self):
         self.position = pygame.math.Vector2(0, 0)

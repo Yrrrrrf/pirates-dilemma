@@ -82,6 +82,4 @@ class AssetManager(BaseModel):
     @staticmethod
     def get_font_abs(filename: str) -> str: return get_font_abs(filename)
     @staticmethod
-    def get_map_abs(filename: str) -> str:
-        print(get_map_abs(filename))
-        return get_map_abs(filename)
+    def get_map_abs(filename: str) -> str: return get_map_abs(filename)
