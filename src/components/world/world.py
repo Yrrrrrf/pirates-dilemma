@@ -3,7 +3,7 @@ import pytmx
 import pyscroll
 from pydantic import BaseModel, Field
 from pyscroll.data import TiledMapData
-from typing import List, Tuple, Optional
+from typing import Any, List, Tuple, Optional
 
 from components.rendering.camera import Camera
 from utils.resource_loader import AssetManager
@@ -71,48 +71,55 @@ class TiledMap(BaseModel):
         group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=0)
         return cls(tmx_data=tmx_data, map_data=map_data, group=group)
 
+
 # * Represents of the game World<map + entities>
+from pydantic import BaseModel, Field
+import pygame
+from typing import Tuple, Optional
+from components.rendering.camera import Camera
+from utils.resource_loader import AssetManager
+
 class World(BaseModel):
-    water: Water = Field(default=None)
-    tile_size: Tuple[int, int] = Field(default=(32, 32))
-    size: Tuple[int, int] = Field(default=(200, 200))
+    map_file: str
     tiled_map: Optional[TiledMap] = Field(default=None)
+    size: Tuple[int, int] = Field(default=(0, 0))
+    tile_size: Tuple[int, int] = Field(default=(32, 32))
 
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, map_file: Optional[str] = None):
-        super().__init__()
-        self.water: Water = Water()
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.load_map()
 
-        if map_file:
-            self.load_map(map_file)
-
-    def load_map(self, map_file: str, screen_size: Tuple[int, int] = (1080, 720)):
+    def load_map(self, screen_size: Tuple[int, int] = (1080, 7020)):
         try:
-            self.tiled_map = TiledMap.load_from_file(AssetManager.get_map_abs(map_file), screen_size)
+            self.tiled_map = TiledMap.load_from_file(AssetManager.get_map_abs(self.map_file), screen_size)
             print(f"Loading map: {self.tiled_map.tmx_data.filename.split('\\')[-1]}")
             self.size = (self.tiled_map.tmx_data.width, self.tiled_map.tmx_data.height)
             self.tile_size = (self.tiled_map.tmx_data.tilewidth, self.tiled_map.tmx_data.tileheight)
+            print(f"Map size: {self.size}, Tile size: {self.tile_size}")
         except Exception as e:
             print(f"Error loading map: {e}")
             self.tiled_map = None
 
     def get_map_size(self) -> Tuple[int, int]:
-        return self.size[0] * self.tile_size[0], self.size[1] * self.tile_size[1]
+        return self.size
 
     def update(self, dt: float):
-        self.water.update(dt)
         if self.tiled_map:
+            # Update the pyscroll group
             self.tiled_map.group.update(dt)
 
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface, camera: Camera):
         if self.tiled_map:
-            # Draw the Tiled map
+            # Draw the entire map
             self.tiled_map.group.draw(surface)
         else:
-            # Fall back to drawing water background if no map is loaded
+            # Fallback rendering if the map isn't loaded
             for y in range(self.size[1]):
                 for x in range(self.size[0]):
-                    tile_rect = pygame.Rect(x * self.tile_size[0], y * self.tile_size[1], self.tile_size[0], self.tile_size[1])
-
+                    screen_pos = camera.world_to_screen(pygame.math.Vector2(x * self.tile_size[0], y * self.tile_size[1]))
+                    if 0 <= screen_pos.x < camera.screen_size[0] and 0 <= screen_pos.y < camera.screen_size[1]:
+                        color = (100, 100, 100) if (x + y) % 2 == 0 else (150, 150, 150)
+                        pygame.draw.rect(surface, color, pygame.Rect(screen_pos, self.tile_size))
