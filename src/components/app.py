@@ -2,7 +2,7 @@ import os
 from pydantic import BaseModel, Field
 import pygame
 
-# todo: create some macro that allow some custom 'import *' from any python module
+# todo: Create some macro that allow some custom 'import *' from any python module
 # todo:   - this to import particular keys from pygame
 # from pygame import K_\*
 
@@ -50,7 +50,6 @@ class App(BaseModel):
         self.app_data.settings.fullscreen ^= True  # xor the fullscreen setting
         self.display_surface = self.set_display_mode()  # update the display mode
         self.engine.initialize_display(self.display_surface)  # Reinitialize the display for the engine
-
 
 
     def handle_events(self) -> None:

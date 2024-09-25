@@ -19,7 +19,10 @@ class WorldManager(BaseModel):
         pygame.font.init()
         self.debug_font = pygame.font.Font(None, 24)
 
-    def create_world(self, name: str, map_file: str = 'some-map.tmx') -> None:
+    def get_current_world(self) -> World:
+        return self.worlds.get(self.current_world)
+
+    def create_world(self, name: str, map_file: str) -> None:
         self.worlds[name] = World(map_file)
 
     def set_water_row(self, row: int):
@@ -33,7 +36,7 @@ class WorldManager(BaseModel):
     def draw(self, surface: pygame.Surface, camera: Camera):
         if self.current_world in self.worlds:
             self.worlds[self.current_world].draw(surface, camera)
-            self.draw_debug_info(surface, camera, self.worlds[self.current_world], 1/60)  # Assuming 60 FPS, adjust as needed
+            self.draw_debug_info(surface, self.worlds[self.current_world], 1/60)  # Assuming 60 FPS, adjust as needed
         else:
             # If somehow the current world is not in the worlds dict, draw a red rectangle
             pygame.draw.rect(surface, (255, 0, 0), pygame.Rect(0, 0, 128, 128))
@@ -41,10 +44,10 @@ class WorldManager(BaseModel):
             debug_surface = self.debug_font.render(debug_info, True, (255, 255, 255))
             surface.blit(debug_surface, (10, 140))
 
-    def draw_debug_info(self, surface: pygame.Surface, camera: Camera, world: World, dt: float):
+    def draw_debug_info(self, surface: pygame.Surface, world: World, dt: float):
         debug_info = [
             f"FPS: {int(1 / dt)}",
-            f"Camera: ({int(camera.position.x)}, {int(camera.position.y)})",
+            # f"Camera: ({int(camera.position.x)}, {int(camera.position.y)})",
             f"Map Size: {world.size if world else 'N/A'}",
             f"Tile Size: {world.tile_size if world else 'N/A'}",
             f"Tiled Map: {'Loaded' if world and world.tiled_map else 'Not Loaded'}",

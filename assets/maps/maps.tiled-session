@@ -3,16 +3,18 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "some-map.tmx",
     "expandedProjectPaths": [
+        ".",
+        "tiles"
     ],
     "fileStates": {
         "some-map.tmx": {
-            "scale": 1.3099609374999999,
+            "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 511.84732369166545,
-                "y": 512.2290144625019
+                "x": 278.1666666666667,
+                "y": 228.66666666666666
             }
         },
         "terrain_tiles_v2.tsx": {
@@ -22,6 +24,10 @@
         "tiles/dirtpath.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "tiles/fence.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 4
         },
         "tiles/nature-bg.tsx": {
             "dynamicWrapping": true,
@@ -38,16 +44,16 @@
         },
         "tiles/terrain-plus.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 3
         },
         "tiles/terrain.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 3
         },
         "tiles/water-demo.tsx": {
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 5.5
         },
         "tiles/water_and_island_tiles_v2.tsx": {
             "scaleInDock": 1,
@@ -59,17 +65,22 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 32,
     "openFiles": [
+        "some-map.tmx",
+        "tiles/water-demo.tsx",
+        "tiles/fence.tsx",
+        "tiles/dirtpath.tsx"
     ],
     "project": "maps.tiled-project",
     "recentFiles": [
         "tiles/dirtpath.tsx",
-        "tiles/terrain-plus.tsx",
+        "tiles/fence.tsx",
+        "tiles/water-demo.tsx",
         "some-map.tmx",
-        "tiles/some-map.tmx",
+        "tiles/terrain-plus.tsx",
         "tiles/terrain.tsx",
+        "tiles/some-map.tmx",
         "tiles/nature-bg.tsx",
         "tiles/water_and_island_tiles_v2.tsx",
-        "tiles/water-demo.tsx",
         "terrain_tiles_v2.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

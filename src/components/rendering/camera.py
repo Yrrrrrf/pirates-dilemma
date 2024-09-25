@@ -1,48 +1,13 @@
-# from dataclasses import dataclass
-# import pygame
-# from typing import List
-
-# from components.world import World
-
-# class YSortCamera:
-#     """
-#     A camera that sorts sprites based on their Y-coordinate for depth effect.
-#     """
-#     def __init__(self, target: pygame.sprite.Sprite, screen_size: tuple[int, int]):
-#         self.target = target
-#         self.offset = pygame.math.Vector2(0, 0)
-#         self.screen_size = screen_size
-#         self.zoom = 1.0
-
-#     def update(self):
-#         """Update camera position to follow the target."""
-#         self.offset.x = self.target.rect.centerx - self.screen_size[0] // 2
-#         self.offset.y = self.target.rect.centery - self.screen_size[1] // 2
-
-#     def apply(self, sprite: pygame.sprite.Sprite) -> pygame.Rect:
-#         """Apply camera offset to a sprite's position."""
-#         return pygame.Rect(
-#             (sprite.rect.x - self.offset.x) * self.zoom,
-#             (sprite.rect.y - self.offset.y) * self.zoom,
-#             sprite.rect.width * self.zoom,
-#             sprite.rect.height * self.zoom
-#         )
-
-#     def draw_sprites(self, surface: pygame.Surface, sprites: List[pygame.sprite.Sprite]):
-#         """Draw sprites sorted by their Y-coordinate."""
-#         sorted_sprites = sorted(sprites, key=lambda sprite: sprite.rect.bottom)
-#         for sprite in sorted_sprites:
-#             adjusted_rect = self.apply(sprite)
-#             scaled_image = pygame.transform.scale(sprite.image, adjusted_rect.size)
-#             surface.blit(scaled_image, adjusted_rect)
-
 import pygame
 from pydantic import BaseModel, Field
 from typing import Tuple
 
 class Camera(BaseModel):
     position: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
-    speed: float = 5.0
+    target: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
+    viewport_size: Tuple[int, int] = Field(default=(800, 600))
+    map_size: Tuple[int, int] = Field(default=(2000, 2000))
+    lerp_speed: float = Field(default=0.1)
     font: pygame.font.Font = Field(default=None)
 
     class Config:
@@ -53,16 +18,36 @@ class Camera(BaseModel):
         pygame.font.init()
         self.font = pygame.font.Font(None, 36)
 
-    def move(self, dx: float, dy: float):
-        self.position.x += dx * self.speed
-        self.position.y += dy * self.speed
+    def set_target(self, target: pygame.math.Vector2):
+        self.target = pygame.math.Vector2(target)  # Create a new Vector2 to avoid reference issues
 
-    def get_offset(self) -> Tuple[float, float]:
-        return -self.position.x, -self.position.y
+    def update(self):
+        # Calculate the desired camera position (center on target)
+        desired_x = self.target.x - self.viewport_size[0] // 2
+        desired_y = self.target.y - self.viewport_size[1] // 2
+
+        # Clamp the camera position to map boundaries
+        max_x = max(0, self.map_size[0] - self.viewport_size[0])
+        max_y = max(0, self.map_size[1] - self.viewport_size[1])
+        desired_x = max(0, min(desired_x, max_x))
+        desired_y = max(0, min(desired_y, max_y))
+
+        # Lerp towards the desired position
+        self.position.x += (desired_x - self.position.x) * self.lerp_speed
+        self.position.y += (desired_y - self.position.y) * self.lerp_speed
+
+        # Ensure the camera position is always an integer to avoid subpixel rendering issues
+        self.position.x = round(self.position.x)
+        self.position.y = round(self.position.y)
+
+    def get_offset(self) -> Tuple[int, int]:
+        return -int(self.position.x), -int(self.position.y)
 
     def apply(self, target_rect: pygame.Rect) -> pygame.Rect:
         return target_rect.move(self.get_offset())
 
-    # New method to reset camera position
-    def reset_position(self):
-        self.position = pygame.math.Vector2(0, 0)
+    def set_viewport_size(self, size: Tuple[int, int]):
+        self.viewport_size = size
+
+    def set_map_size(self, size: Tuple[int, int]):
+        self.map_size = size

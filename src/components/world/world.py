@@ -6,7 +6,7 @@ from pyscroll.data import TiledMapData
 from typing import List, Tuple, Optional
 
 from components.rendering.camera import Camera
-from utils.resource_loader import AssetManager, get_map_abs
+from utils.resource_loader import AssetManager
 
 
 # * Represents of a water tile (used for the background)
@@ -75,7 +75,7 @@ class TiledMap(BaseModel):
 class World(BaseModel):
     water: Water = Field(default=None)
     tile_size: Tuple[int, int] = Field(default=(32, 32))
-    size: Tuple[int, int] = Field(default=(64, 64))
+    size: Tuple[int, int] = Field(default=(200, 200))
     tiled_map: Optional[TiledMap] = Field(default=None)
 
     class Config:
@@ -90,38 +90,29 @@ class World(BaseModel):
 
     def load_map(self, map_file: str, screen_size: Tuple[int, int] = (1080, 720)):
         try:
-            map_path = get_map_abs(map_file)
-            self.tiled_map = TiledMap.load_from_file(map_path, screen_size)
-            print(f"Loaded map from file: {map_path}")
+            self.tiled_map = TiledMap.load_from_file(AssetManager.get_map_abs(map_file), screen_size)
+            print(f"Loading map: {self.tiled_map.tmx_data.filename.split('\\')[-1]}")
             self.size = (self.tiled_map.tmx_data.width, self.tiled_map.tmx_data.height)
             self.tile_size = (self.tiled_map.tmx_data.tilewidth, self.tiled_map.tmx_data.tileheight)
         except Exception as e:
             print(f"Error loading map: {e}")
             self.tiled_map = None
 
+    def get_map_size(self) -> Tuple[int, int]:
+        return self.size[0] * self.tile_size[0], self.size[1] * self.tile_size[1]
+
     def update(self, dt: float):
         self.water.update(dt)
         if self.tiled_map:
             self.tiled_map.group.update(dt)
 
-    def draw(self, surface: pygame.Surface, camera: Camera):
+    def draw(self, surface: pygame.Surface):
         if self.tiled_map:
-            # Update the map view
-            self.tiled_map.group.center((int(camera.position.x), int(camera.position.y)))
-
             # Draw the Tiled map
             self.tiled_map.group.draw(surface)
         else:
             # Fall back to drawing water background if no map is loaded
-            visible_area = pygame.Rect(camera.position, surface.get_size())
-            start_x = max(0, int(camera.position.x // self.tile_size[0]))
-            start_y = max(0, int(camera.position.y // self.tile_size[1]))
-            end_x = min(self.size[0], start_x + surface.get_width() // self.tile_size[0] + 2)
-            end_y = min(self.size[1], start_y + surface.get_height() // self.tile_size[1] + 2)
-
-            for y in range(start_y, end_y):
-                for x in range(start_x, end_x):
+            for y in range(self.size[1]):
+                for x in range(self.size[0]):
                     tile_rect = pygame.Rect(x * self.tile_size[0], y * self.tile_size[1], self.tile_size[0], self.tile_size[1])
-                    if visible_area.colliderect(tile_rect):
-                        screen_pos = camera.apply(tile_rect)
-                        self.water.draw(surface, screen_pos.topleft)
+
