@@ -2,10 +2,8 @@ import pygame
 import pytmx
 import pyscroll
 from pydantic import BaseModel, Field
-from pyscroll.data import TiledMapData
-from typing import Any, List, Tuple, Optional
+from typing import List, Tuple, Optional
 
-from components.rendering.camera import Camera
 from utils.resource_loader import AssetManager
 
 
@@ -64,26 +62,27 @@ class TiledMap(BaseModel):
         arbitrary_types_allowed = True
 
     @classmethod
-    def load_from_file(cls, filename: str, screen_size: Tuple[int, int]):
+    def load_from_file(cls, filename: str):
         tmx_data = pytmx.load_pygame(filename)
         map_data = pyscroll.data.TiledMapData(tmx_data)
-        map_layer = pyscroll.BufferedRenderer(map_data, screen_size)
+        
+        # Calculate the map size in pixels
+        map_width = tmx_data.width * tmx_data.tilewidth
+        map_height = tmx_data.height * tmx_data.tileheight
+        
+        # Create a BufferedRenderer with the map's full size
+        map_layer = pyscroll.BufferedRenderer(map_data, (map_width, map_height))
+        
         group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=0)
         return cls(tmx_data=tmx_data, map_data=map_data, group=group)
 
 
 # * Represents of the game World<map + entities>
-from pydantic import BaseModel, Field
-import pygame
-from typing import Tuple, Optional
-from components.rendering.camera import Camera
-from utils.resource_loader import AssetManager
-
 class World(BaseModel):
     map_file: str
     tiled_map: Optional[TiledMap] = Field(default=None)
-    size: Tuple[int, int] = Field(default=(0, 0))
-    tile_size: Tuple[int, int] = Field(default=(32, 32))
+    size: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
+    tile_size: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(32, 32))
 
     class Config:
         arbitrary_types_allowed = True
@@ -92,34 +91,16 @@ class World(BaseModel):
         super().__init__(**data)
         self.load_map()
 
-    def load_map(self, screen_size: Tuple[int, int] = (1080, 7020)):
+    def load_map(self):
         try:
-            self.tiled_map = TiledMap.load_from_file(AssetManager.get_map_abs(self.map_file), screen_size)
-            print(f"Loading map: {self.tiled_map.tmx_data.filename.split('\\')[-1]}")
-            self.size = (self.tiled_map.tmx_data.width, self.tiled_map.tmx_data.height)
-            self.tile_size = (self.tiled_map.tmx_data.tilewidth, self.tiled_map.tmx_data.tileheight)
+            self.tiled_map = TiledMap.load_from_file(AssetManager.get_map_abs(self.map_file))
+            print(f"Loading map: {self.map_file}")
+            self.size = pygame.math.Vector2(self.tiled_map.tmx_data.width, self.tiled_map.tmx_data.height)
+            self.tile_size = pygame.math.Vector2(self.tiled_map.tmx_data.tilewidth, self.tiled_map.tmx_data.tileheight)
             print(f"Map size: {self.size}, Tile size: {self.tile_size}")
         except Exception as e:
             print(f"Error loading map: {e}")
             self.tiled_map = None
 
-    def get_map_size(self) -> Tuple[int, int]:
-        return self.size
-
     def update(self, dt: float):
-        if self.tiled_map:
-            # Update the pyscroll group
-            self.tiled_map.group.update(dt)
-
-    def draw(self, surface: pygame.Surface, camera: Camera):
-        if self.tiled_map:
-            # Draw the entire map
-            self.tiled_map.group.draw(surface)
-        else:
-            # Fallback rendering if the map isn't loaded
-            for y in range(self.size[1]):
-                for x in range(self.size[0]):
-                    screen_pos = camera.world_to_screen(pygame.math.Vector2(x * self.tile_size[0], y * self.tile_size[1]))
-                    if 0 <= screen_pos.x < camera.screen_size[0] and 0 <= screen_pos.y < camera.screen_size[1]:
-                        color = (100, 100, 100) if (x + y) % 2 == 0 else (150, 150, 150)
-                        pygame.draw.rect(surface, color, pygame.Rect(screen_pos, self.tile_size))
+        if self.tiled_map: self.tiled_map.group.update(dt)
