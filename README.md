@@ -13,7 +13,6 @@ Pirate's Dilemma is a game that aims to raise awareness about piracy through int
 
 ## Requirements
 - [python `3.12`](https://www.python.org/downloads/)
-- [pygame `latest`](https://www.pygame.org/)
 
 ## Installation
 1. Clone the repository:
@@ -25,7 +24,7 @@ cd pirates-dilemma
 2. Create a virtual environment (optional but recommended):
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+source venv/bin/activate  # on Unix or MacOS
 ```
 
 3. Install the required packages:

@@ -33,81 +33,58 @@ class WorldManager(BaseModel):
 
     def update(self, dt: float):
         keys = pygame.key.get_pressed()
-        dx = keys[pygame.K_d] - keys[pygame.K_a]
-        dy = keys[pygame.K_s] - keys[pygame.K_w]
+        dx = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
+        dy = keys[pygame.K_DOWN] - keys[pygame.K_UP]
+        # Check if Shift is pressed (either left or right shift)
+        speed_multiplier = 4 if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) else 1.5
+        # Apply the speed multiplier
+        dx *= speed_multiplier
+        dy *= speed_multiplier
         self.camera.move(dx, dy, dt)
 
-        if self.current_world:
-            self.current_world.update(dt)
+        if self.current_world: self.current_world.update(dt)
 
     def draw(self, surface: pygame.Surface):
-        if not self.current_world or not self.current_world.tiled_map:
-            return
-
-        world = self.current_world
-        tmx_data = world.tiled_map.tmx_data
-        tile_width, tile_height = tmx_data.tilewidth, tmx_data.tileheight
-
-        # Calculate visible area in tile coordinates
+        # Get the size of the surface and update the BufferedRenderer's viewport
         cam_x, cam_y = self.camera.position
         cam_width, cam_height = surface.get_size()
-        start_x = max(0, int(cam_x / tile_width))
-        start_y = max(0, int(cam_y / tile_height))
-        end_x = min(tmx_data.width, int((cam_x + cam_width) / tile_width) + 1)
-        end_y = min(tmx_data.height, int((cam_y + cam_height) / tile_height) + 1)
 
-        # Render visible tiles
-        for layer in tmx_data.visible_layers:
-            if hasattr(layer, 'data'):
-                for y in range(start_y, end_y):
-                    for x in range(start_x, end_x):
-                        tile_gid = layer.data[y][x]
-                        if tile_gid:
-                            tile_image = tmx_data.get_tile_image_by_gid(tile_gid)
-                            if tile_image:
-                                # Calculate screen position
-                                screen_x = int((x * tile_width - cam_x) * self.camera.zoom)
-                                screen_y = int((y * tile_height - cam_y) * self.camera.zoom)
-                                
-                                # Scale the tile image based on zoom
-                                scaled_tile = pygame.transform.scale(
-                                    tile_image,
-                                    (int(tile_width * self.camera.zoom), int(tile_height * self.camera.zoom))
-                                )
-                                
-                                surface.blit(scaled_tile, (screen_x, screen_y))
+        # Update the size of the BufferedRenderer's viewport (viewport is the visible part)
+        self.current_world.tiled_map.group._map_layer.set_size((cam_width, cam_height))
 
-    def draw_debug_info(self, surface: pygame.Surface, dt: float):
-        if not self.current_world:
-            return
+        # Draw visible layers in the PyscrollGroup (with updated viewport)
+        self.current_world.tiled_map.group.center((cam_x + cam_width // 2, cam_y + cam_height // 2))  # Centering the camera on the group
+        self.current_world.tiled_map.group.draw(surface)
+
+    def draw_debug(self, surface: pygame.Surface, dt: float):
+        """Draw detailed debug information below the compact information."""
+        if not self.current_world: return  # No world to debug
 
         world = self.current_world
         debug_info = [
-            ("Game", [
-                f"FPS: {int(1 / dt)}",
-                f"Time: {pygame.time.get_ticks() / 1000:.2f}s"
-            ]),
             ("World", [
                 f"Name: {world.map_file.split('.')[0]}",
-                f"Size: {world.size[0]}x{world.size[1]} tiles",
-                f"Tile Size: {world.tile_size[0]}x{world.tile_size[1]}px",
-                f"Pixels: {world.size[0] * world.tile_size[0]}x{world.size[1] * world.tile_size[1]}px",
+                f"Size: {int(world.size[0])}x{int(world.size[1])} tiles",  # No decimals
+                f"Tile Size: {int(world.tile_size[0])}x{int(world.tile_size[1])} px",  # No decimals
+                f"Pixels: {int(world.size[0] * world.tile_size[0])}x{int(world.size[1] * world.tile_size[1])} px",  # No decimals
             ]),
             ("Camera", [
-                f"Position: ({self.camera.position.x:.2f}, {self.camera.position.y:.2f})",
-                f"Zoom: {self.camera.zoom:.2f}"
+                f"Position: ({int(self.camera.position.x)}, {int(self.camera.position.y)})",  # No decimals for position
+                f"Zoom: {self.camera.zoom:.2f}",  # Keep decimals for zoom for precision
             ])
         ]
 
-        y_offset = 10
+        # Offset to account for compact info
+        y_offset = 40
         for section, items in debug_info:
-            header_surface = self.debug_header_font.render(section, True, (255, 255, 0))
+            header_surface = self.debug_header_font.render(section, True, (64, 128, 96))
             surface.blit(header_surface, (10, y_offset))
-            y_offset += 25
+            y_offset += 24
 
+            # Render details
             for item in items:
-                detail_surface = self.debug_detail_font.render(item, True, (200, 200, 200))
+                detail_surface = self.debug_detail_font.render(item, True, (255, 255, 255))
                 surface.blit(detail_surface, (20, y_offset))
-                y_offset += 20
-            
+                y_offset += 16
+
             y_offset += 5  # Add space between sections

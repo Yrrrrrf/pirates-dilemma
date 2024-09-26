@@ -1,16 +1,9 @@
 from pydantic import BaseModel, Field
 import pygame
+import psutil
 from typing import Optional
 
 from components.world.world_manager import WorldManager
-from components.rendering.camera import Camera
-
-from pydantic import BaseModel, Field
-import pygame
-from typing import Optional
-
-from components.world.world_manager import WorldManager
-from components.rendering.camera import Camera
 
 class Engine(BaseModel):
     display_surface: Optional[pygame.Surface] = Field(default=None)
@@ -26,26 +19,80 @@ class Engine(BaseModel):
 
     def handle_events(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    return False
-            self.world_manager.camera.handle_event(event)
+            match event.type:
+                case pygame.QUIT: return False
+                case pygame.KEYDOWN:
+                    match event.key:
+                        case pygame.K_ESCAPE: return False  # Exit the game
+                        # case pygame.K_PLUS | pygame.K_KP_PLUS:
+                        #     self.world_manager
+                        # case pygame.K_MINUS | pygame.K_KP_MINUS:
+                        #     self.world_manager.zoom_out()
+
         return True
+
+    def load_debug_font(self, font_name: str = None, font_size: int = 18):
+            """Load the font for displaying debug information."""
+            # Load a system font or a custom font if specified
+            if font_name:
+                return pygame.font.Font(font_name, font_size)
+            else:
+                return pygame.font.SysFont('Arial', font_size)  # Default to Arial if no font specified
+
+    def draw_debug(self):
+        """Draw compact system performance info at the top of the screen."""
+        # Get performance data
+        fps = int(self.clock.get_fps())
+        cpu_load = psutil.cpu_percent()
+        memory_info = psutil.virtual_memory()
+        memory_usage = memory_info.percent
+        elapsed_time = pygame.time.get_ticks() // 1000
+
+        compact_info = (
+            f"FPS: {fps:3d} | "
+            f"CPU: {cpu_load:04.1f}% | "
+            f"Mem: {memory_usage:04.1f}% | "
+            f"Time: {elapsed_time//3600:02d}:{(elapsed_time%3600)//60:02d}:{elapsed_time%60:02d}:{pygame.time.get_ticks()%1000:03d}"
+        )
+
+        # Define text position and colors
+        text_x, text_y = 10, 10
+        text_color = (255, 255, 255)
+        shadow_color = (0, 0, 0)
+        bg_color = (0, 0, 0, 128)
+
+        # Render the compact info text
+        compact_font = self.load_debug_font()
+        compact_surface = compact_font.render(compact_info, True, text_color)
+        shadow_surface = compact_font.render(compact_info, True, shadow_color)
+
+        text_width, text_height = compact_surface.get_size()
+
+        # Draw a semi-transparent background rectangle
+        background_rect = pygame.Rect(text_x - 5, text_y - 5, text_width + 10, text_height + 10)
+        pygame.draw.rect(self.display_surface, bg_color, background_rect)
+
+        # Glow/Shadow Effect
+        shadow_offsets = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
+        for offset in shadow_offsets:
+            self.display_surface.blit(shadow_surface, (text_x + offset[0], text_y + offset[1]))
+
+        # Draw the main text
+        self.display_surface.blit(compact_surface, (text_x, text_y))
+
+        # Update the clock
+        self.clock.tick()
 
     def run(self, dt: float):
         if self.display_surface is None or self.world_manager.current_world is None:
             raise ValueError("Display surface or World not initialized. Call initialize_display() first.")
     
-        if not self.handle_events():
-            return False
-
         self.world_manager.update(dt)
 
         self.display_surface.fill((0, 0, 0))  # Clear the screen
         self.world_manager.draw(self.display_surface)
-        self.world_manager.draw_debug_info(self.display_surface, dt)
+        self.draw_debug()
+        self.world_manager.draw_debug(self.display_surface, dt)
 
         pygame.display.flip()
         return True
