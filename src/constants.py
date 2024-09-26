@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Tuple
 from pydantic import BaseModel
 
-from utils.resource_loader import AssetManager
+from utils import AssetManager
 
 
 class GameInfo:

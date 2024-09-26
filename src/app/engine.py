@@ -3,7 +3,7 @@ import pygame
 import psutil
 from typing import Optional
 
-from components.world.world_manager import WorldManager
+from app.world import WorldManager
 
 class Engine(BaseModel):
     display_surface: Optional[pygame.Surface] = Field(default=None)

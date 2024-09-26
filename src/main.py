@@ -7,7 +7,7 @@ Date: Friday 09/08/2024
 #? Imports ------------------------------------------------------------------------------------
 
 from constants import GameInfo  # import global variables
-from components.app import App  # import app
+from app import App  # import app
 
 #? Logic --------------------------------------------------------------------------------------
  
