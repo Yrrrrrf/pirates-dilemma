@@ -49,7 +49,6 @@ class App(BaseModel):
         self.display_surface = self.set_display_mode()  # update the display mode
         self.engine.initialize_display(self.display_surface)  # Reinitialize the display for the engine
 
-
     def handle_events(self) -> None:
         for event in pygame.event.get():
             match event.type:
@@ -59,6 +58,7 @@ class App(BaseModel):
                         case pygame.K_ESCAPE: self.running = False
                         case pygame.K_F1: print("Impl: F1 to toggle editor mode")
                         case pygame.K_F11: self._toggle_fullscreen()
+                        case pygame.K_i: self.engine.ui.toggle_inventory()
                         case _: pass
 
     def run(self) -> None:

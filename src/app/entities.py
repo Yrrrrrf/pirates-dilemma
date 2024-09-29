@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from typing import Tuple, List, Dict, Optional
 from enum import Enum
 
+
 class AnimationState(Enum):
     IDLE = 0
     MOVE = 1
@@ -74,8 +75,6 @@ class AnimatedSprite(BaseModel):
         return surface
 
 
-
-
 class Entity(BaseModel):
     position: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
     
@@ -100,9 +99,6 @@ class NPC(Actor):
     dialogue: str = Field(default="Hello, I'm an NPC!")
 
 
-
-
-
 class Player(Actor):
     health: int = Field(default=100)
     max_health: int = Field(default=100)
@@ -114,7 +110,6 @@ class Player(Actor):
         super().__init__(**data)
         self.sprite = AnimatedSprite()
         self.load_sprite_sheet()
-
 
     def load_sprite_sheet(self):
         try:            
@@ -182,7 +177,6 @@ class Player(Actor):
         self.sprite.frame_size = (48, 48)
         self.sprite.animations = {state: [(0, 0)] for state in AnimationState}
 
-
     def update(self, dt: float, keys: pygame.key.ScancodeWrapper):
         dx = keys[pygame.K_d] - keys[pygame.K_a]
         dy = keys[pygame.K_s] - keys[pygame.K_w]
@@ -226,7 +220,6 @@ class Player(Actor):
         #     self.sprite.frame_size[0] * self.scale_factor,
         #     self.sprite.frame_size[1] * self.scale_factor
         # )
-
 
     def attack(self):
         self.sprite.current_state = AnimationState.ATTACK

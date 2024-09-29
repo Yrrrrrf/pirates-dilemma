@@ -9,6 +9,7 @@ class AssetType(Enum):
     FONTS = "fonts"
     IMAGES = "images"
     MAPS = "maps"
+    SCRIPTS = "scripts"
 
 class PathSolver:
     ROOT = Path(__file__).parent.parent.parent / "assets"

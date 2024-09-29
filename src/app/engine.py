@@ -4,32 +4,27 @@ import psutil
 from typing import Optional
 
 from app.world import WorldManager
+from app.game_ui import GameUI
+from settings import Language, Settings
 
 class Engine(BaseModel):
     display_surface: Optional[pygame.Surface] = Field(default=None)
     world_manager: WorldManager = Field(default_factory=WorldManager)
     clock: pygame.time.Clock = Field(default_factory=pygame.time.Clock)
+    ui: Optional[GameUI] = Field(default=None)  # Add GameUI field
 
     class Config:
         arbitrary_types_allowed = True
 
     def initialize_display(self, surface: pygame.Surface):
+        # Initialize the display surface and the world manager
         self.display_surface = surface
         self.world_manager.create_world("main", 'big-map.tmx')
 
-    def handle_events(self):
-        for event in pygame.event.get():
-            match event.type:
-                case pygame.QUIT: return False
-                case pygame.KEYDOWN:
-                    match event.key:
-                        case pygame.K_ESCAPE: return False  # Exit the game
-                        # case pygame.K_PLUS | pygame.K_KP_PLUS:
-                        #     self.world_manager
-                        # case pygame.K_MINUS | pygame.K_KP_MINUS:
-                        #     self.world_manager.zoom_out()
-
-        return True
+        # * Initialize the UI
+        settings: Settings = Settings(language=Language.SPANISH)
+        # settings: Settings = Settings(language=Language.ENGLISH)
+        self.ui = GameUI(surface.get_size(), settings=settings)
 
     def load_debug_font(self, font_name: str = None, font_size: int = 18):
             """Load the font for displaying debug information."""
@@ -91,8 +86,9 @@ class Engine(BaseModel):
 
         self.display_surface.fill((0, 0, 0))  # Clear the screen
         self.world_manager.draw(self.display_surface)
-        self.draw_debug()
         self.world_manager.draw_debug(self.display_surface, dt)
+        
+        self.ui.draw(self.display_surface)  # Draw the UI
 
         pygame.display.flip()
         return True
