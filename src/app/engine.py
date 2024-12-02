@@ -5,7 +5,8 @@ from typing import Optional
 
 from app.world import WorldManager
 from app.game_ui import GameUI
-from settings import Language, Settings
+from project.settings.lang import Language
+from project.settings import Settings
 
 class Engine(BaseModel):
     display_surface: Optional[pygame.Surface] = Field(default=None)

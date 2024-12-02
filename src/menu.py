@@ -4,7 +4,7 @@ import pygame
 from pygame import Surface
 from layout.menu import MenuTheme, menu_lang_manager
 from layout.card import Card
-from settings import Language
+from project.settings.lang import Language
 from utils import AssetManager
 
 

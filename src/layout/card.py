@@ -2,7 +2,6 @@ from typing import Callable, List, Tuple
 from pygame import Surface
 
 from layout.menu import MenuItem, MenuRenderer, MenuTheme, menu_lang_manager
-from settings import LanguageManager
 
 
 class Card:

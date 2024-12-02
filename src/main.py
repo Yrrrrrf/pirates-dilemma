@@ -1,9 +1,9 @@
 """
 Main module for Pirate's Dilemma
 """
-from constants import GameInfo  # import global variables
+from project.settings.constants import GameInfo  # import global variables
 from app import App  # import app
-from app.game_state import app_data
+from project import app_data  # import app data
 
 
 def main() -> None:

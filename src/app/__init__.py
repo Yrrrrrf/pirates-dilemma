@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 import pygame
-from constants import GameInfo
+from project import AppData
+from project.settings.constants import GameInfo  # import global variables
 from utils import AssetManager
-from app.game_state import AppData
 from app.engine import Engine
 
 class App(BaseModel):

@@ -1,7 +1,8 @@
 import pygame
 from pygame import Surface, Rect, Color
 from typing import Tuple, List
-from settings import Settings, LanguageManager
+from project.settings import Settings
+from project.settings.lang import LanguageManager
 from utils import AssetManager
 
 

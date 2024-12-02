@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Tuple
 
-from settings import Settings
-from constants import Themes, Theme
+from project.theme.theme import Theme, Themes
+from project.settings import Settings
 
 
 class AppData(BaseModel):
@@ -16,7 +16,5 @@ class AppData(BaseModel):
     def get_screen_size(self) -> Tuple[int, int]:
         return (self.settings.width, self.settings.height)
 
-# print(game_state.model_dump_json())  # Easily serialize to JSON
 
-# * Create an instance of the AppData model
 app_data = AppData()
