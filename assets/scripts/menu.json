@@ -1,0 +1,52 @@
+{
+    "menu_title": [
+        "The Pirate's Dilemma",
+        "El Dilema del Pirata"
+    ],
+
+    "start": [
+        "Start Game", 
+        "Comenzar"
+    ],
+
+    "settings": [
+        "Settings", 
+        "Configuración"
+    ],
+
+    "options": [
+        "Options", 
+        "Opciones"
+    ],
+    "exit": [
+        "Exit", 
+        "Salir"
+    ],
+
+    "back": [
+        "Back", 
+        "Atrás"
+    ],
+
+    "english": [
+        "English", 
+        "Inglés"
+    ],
+    "spanish": [
+        "Spanish", 
+        "Español"
+    ],
+
+    "language": [
+        "Language", 
+        "Idioma"
+    ],
+    "fullscreen": [
+        "Fullscreen", 
+        "Pantalla completa"
+    ],
+    "resolution": [
+        "Resolution", 
+        "Resolución"
+    ]
+}

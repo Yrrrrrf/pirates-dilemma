@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface, Rect, Color
 from typing import Tuple, List
-from settings import Settings, Language, LanguageManager
+from settings import Settings, LanguageManager
 from utils import AssetManager
 
 
@@ -25,7 +25,7 @@ class GameUI:
         self.money = 1000
         self.date = "15-05-12"
         self.reputation = 75
-        
+
         # Colors
         self.bg_color = Color(20, 20, 20, 200)
         self.text_color = Color(240, 240, 240)

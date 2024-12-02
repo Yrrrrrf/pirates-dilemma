@@ -82,7 +82,7 @@ class WorldManager(BaseModel):
                 int(new_world.size.x * new_world.tile_size.x),
                 int(new_world.size.y * new_world.tile_size.y)
             )
-            self.player.position = pygame.math.Vector2(32, 32)
+            self.player.position = pygame.math.Vector2(300, 300)
 
     def update(self, dt: float):
         keys = pygame.key.get_pressed()

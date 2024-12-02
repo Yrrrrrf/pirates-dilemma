@@ -19,20 +19,20 @@ class Engine(BaseModel):
     def initialize_display(self, surface: pygame.Surface):
         # Initialize the display surface and the world manager
         self.display_surface = surface
+        # todo: Change the map file to 'big-map.tmx' to test the big map
         self.world_manager.create_world("main", 'big-map.tmx')
+        # self.world_manager.create_world("main", 'mapp.tmx')
 
         # * Initialize the UI
-        settings: Settings = Settings(language=Language.SPANISH)
-        # settings: Settings = Settings(language=Language.ENGLISH)
+        # settings: Settings = Settings(language=Language.SPANISH)
+        settings: Settings = Settings(language=Language.ENGLISH)
         self.ui = GameUI(surface.get_size(), settings=settings)
 
     def load_debug_font(self, font_name: str = None, font_size: int = 18):
             """Load the font for displaying debug information."""
             # Load a system font or a custom font if specified
-            if font_name:
-                return pygame.font.Font(font_name, font_size)
-            else:
-                return pygame.font.SysFont('Arial', font_size)  # Default to Arial if no font specified
+            if font_name: return pygame.font.Font(font_name, font_size)
+            else: return pygame.font.SysFont('Arial', font_size)  # Default to Arial if no font specified
 
     def draw_debug(self):
         """Draw compact system performance info at the top of the screen."""

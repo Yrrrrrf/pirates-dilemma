@@ -103,8 +103,8 @@ class Player(Actor):
     health: int = Field(default=100)
     max_health: int = Field(default=100)
     sprite_sheet_path: str = Field(default="static/player.png")
-    scale_factor: float = Field(default=2.0)  # New field for scaling
-    # scale_factor: float = Field(default=4.0)  # New field for scaling
+    # scale_factor: float = Field(default=2.0)  # New field for scaling
+    scale_factor: float = Field(default=4.0)  # New field for coscaling
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -112,7 +112,7 @@ class Player(Actor):
         self.load_sprite_sheet()
 
     def load_sprite_sheet(self):
-        try:            
+        try:
             img_path = AssetManager.get_image("static\\player.png")
             if not os.path.exists(img_path): raise FileNotFoundError(f"Image file not found: {img_path}")
             print(f"Image file exists: {img_path}")

@@ -2,15 +2,11 @@ from pydantic import BaseModel, Field
 import pygame
 from constants import GameInfo
 from utils import AssetManager
-from app.game_state import AppData, app_data
+from app.game_state import AppData
 from app.engine import Engine
 
-# todo: Create some macro that allow some custom 'import *' from any python module
-# todo:   - this to import particular keys from pygame
-# from pygame import K_\*
-
 class App(BaseModel):
-    app_data: AppData = Field(default=app_data)
+    app_data: AppData = Field(...)
     display_surface: pygame.Surface = Field(default=None)
     running: bool = Field(default=True)
     engine: Engine = Field(default=None)
@@ -19,30 +15,28 @@ class App(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    def __init__(self, **data):
-        super().__init__(**data)
+    def model_post_init(self, __context) -> None:
+        """Initialize pygame and setup the application after Pydantic validation"""
         pygame.init()
 
-        # * Set the window title and icon
         pygame.display.set_caption(f"{GameInfo.NAME} {GameInfo.VERSION}")
         pygame.display.set_icon(pygame.image.load(AssetManager.get_image("pirate-hat.png")))
 
-        # * Init game engine
         self.engine = Engine()
 
-        # * Set the display mode based on the settings
+        # Set the display mode based on the settings
         self.display_surface = self.set_display_mode()
         self.engine.initialize_display(self.display_surface)
 
         print(f"\033[94mApp Running\033[0m")
 
     def set_display_mode(self) -> pygame.Surface:
-        match self.app_data.settings.fullscreen:
-            case True: return pygame.display.set_mode((0, 0), pygame.NOFRAME)
-            # from pygame._sdl2.video import Window
-            # win = Window.from_display_module()
-            # print(f"\033[94mwin: {win.position}\033[0m")
-            case False: return pygame.display.set_mode(self.app_data.settings.get_screen_size(), pygame.RESIZABLE)
+        if self.app_data.settings.fullscreen:
+            return pygame.display.set_mode((0, 0), pygame.NOFRAME)
+        return pygame.display.set_mode(
+            self.app_data.settings.get_screen_size(), 
+            pygame.RESIZABLE
+        )
 
     def _toggle_fullscreen(self):
         self.app_data.settings.fullscreen ^= True  # xor the fullscreen setting
@@ -52,7 +46,8 @@ class App(BaseModel):
     def handle_events(self) -> None:
         for event in pygame.event.get():
             match event.type:
-                case pygame.QUIT: self.running = False
+                case pygame.QUIT: 
+                    self.running = False
                 case pygame.KEYDOWN:
                     match event.key:
                         case pygame.K_ESCAPE: self.running = False
@@ -62,14 +57,13 @@ class App(BaseModel):
                         case _: pass
 
     def run(self) -> None:
-        try:
-            while self.running:
-                dt: float = self.clock.tick(self.app_data.settings.fps) / 1000.0
-                self.handle_events()  # Handle events before updating the engine
-                self.engine.run(dt)   # Update the engine with the delta time
+        while self.running:
+            dt: float = self.clock.tick(self.app_data.settings.fps) / 1000.0
+            self.handle_events()  # Handle events before updating the engine
+            self.engine.run(dt)   # Update the engine with the delta time
 
-                match pygame.get_init():  # Check if pygame is initialized
-                    case True: pygame.display.flip()  # Update the display if it is
-                    case False: self.running = False  # Stop the loop if pygame is not
-        finally:  # Ensure cleanup is done even if an exception occurs
-            if pygame.get_init(): pygame.quit()
+            match pygame.get_init():
+                case True: pygame.display.flip()
+                case False: self.running = False
+
+        pygame.quit()
