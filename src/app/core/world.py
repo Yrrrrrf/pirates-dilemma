@@ -89,9 +89,12 @@ class WorldManager(BaseModel):
             self.player.position = pygame.math.Vector2(300, 300)
 
     def update(self, dt: float):
+        # Handle keyboard input
         keys = pygame.key.get_pressed()
-        
+        # Update player
         self.player.update(dt, keys)
+
+
 
         camera_dx = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
         camera_dy = keys[pygame.K_DOWN] - keys[pygame.K_UP]
@@ -114,13 +117,17 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.center((cam_x + cam_width // 2, cam_y + cam_height // 2))
         self.current_world.tiled_map.group.draw(surface)
 
-        self.player.draw(surface, self.camera)
-        
-        # Draw debug UI if initialized
+        if self.player:
+            self.player.draw(surface, self.camera)
+            self.player.reputation.draw(surface, (10, 10))
+            self.player.reputation.modify(0.2)
+
+            # Draw inventory
+            self.player.inventory.draw(surface)
+
+        # * Draw debug UI if initialized
         if self.debug_ui: self.debug_ui.draw(surface)
 
-        self.player.reputation.draw(surface, (10, 10))
-        self.player.reputation.modify(2)
 
 
     # ? Debug UI methods ----------------------------------------------------------------------

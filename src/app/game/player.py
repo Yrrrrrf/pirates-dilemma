@@ -6,9 +6,9 @@ from pydantic import Field
 from app.core.camera import Camera
 from app.core.entities.entities import Actor
 from app.core.entities.sprites import AnimatedSprite, AnimationState, Direction
+from app.game.reputation import Reputation
 from app.game.inventory import Inventory
 from app.game.abilities import Ability
-from app.game.reputation import Reputation
 from utils import AssetManager
 
 class Player(Actor):

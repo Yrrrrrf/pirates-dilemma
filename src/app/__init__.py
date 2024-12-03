@@ -46,15 +46,26 @@ class App(BaseModel):
     def handle_events(self) -> None:
         for event in pygame.event.get():
             match event.type:
-                case pygame.QUIT: 
-                    self.running = False
+                case pygame.QUIT: self.running = False
+                # * Handle key-press events...
                 case pygame.KEYDOWN:
                     match event.key:
                         case pygame.K_ESCAPE: self.running = False
                         case pygame.K_F1: print("Impl: F1 to toggle editor mode")
                         case pygame.K_F11: self._toggle_fullscreen()
-                        case pygame.K_i: self.engine.ui.toggle_inventory()
+                        case pygame.K_i: self.engine.world_manager.player.inventory.toggle_visibility()
                         case _: pass
+                # * Handle mouse events...
+                case pygame.MOUSEBUTTONDOWN:
+                    match event.button:
+                        case 1: self.engine.world_manager.player.inventory.handle_click(event.pos)
+                        case 2: print("Impl: Middle mouse button click")
+                        case 3: print("Impl: Right mouse button click")
+                        case _: pass
+                case pygame.VIDEORESIZE:
+                    self.display_surface = pygame.display.set_mode(event.size, pygame.RESIZABLE)
+                    self.engine.initialize_display(self.display_surface)
+
 
     def run(self) -> None:
         while self.running:
