@@ -18,6 +18,12 @@ class Reputation(BaseModel):
         """Get reputation-based multiplier for various game mechanics"""
         return 1.0 + (self.value - 50) / 100  # Range: 0.5 to 1.5
 
+    def get_status(self) -> str:
+        """Get reputation status based on value"""
+        if self.value <= 25: return "Chaotic"
+        elif self.value >= 75: return "Lawful"
+        return "Neutral"
+
     def draw(self, surface: pygame.Surface, position: Tuple[int, int], size: Tuple[int, int] = (200, 30)) -> None:
         """Draw a stylized reputation bar with gradient effect"""
 
@@ -57,7 +63,7 @@ class Reputation(BaseModel):
 
         # Add status text
         # todo: Add some more user-friendly status text (also add more types of status)
-        status = "Chaotic" if self.value <= 25 else "Lawful" if self.value >= 75 else "Neutral"
+        status = self.get_status()
         status_text = font.render(status, True, (255, 255, 255))
         text_rect = status_text.get_rect(center=(width//2, height//2))
 
@@ -70,5 +76,5 @@ class Reputation(BaseModel):
         surface.blit(status_text, (x + text_rect.x, y + text_rect.y))
         
         # Draw value
-        value_text = font.render(f"{self.value}%", True, (255, 255, 255))
+        value_text = font.render(f"{self.value:.2f}%", True, (255, 255, 255))
         surface.blit(value_text, (x + width + 10, y + height//2 - value_text.get_height()//2))

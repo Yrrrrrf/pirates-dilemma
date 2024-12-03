@@ -1,5 +1,6 @@
 # stdlib
-from typing import Dict, Optional
+import random
+from typing import Dict, List, Optional
 # third party
 import pygame
 import pytmx
@@ -7,6 +8,7 @@ import pyscroll
 from pydantic import BaseModel, Field
 # local
 from app.core.camera import Camera
+from app.core.entities.npc import NPC, create_random_npc
 from app.game.player import Player
 from layout.ui.debug import create_debug_ui, DebugUI
 from utils import AssetManager
@@ -37,6 +39,7 @@ class World(BaseModel):
     tiled_map: Optional[TiledMap] = Field(default=None)
     size: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(0, 0))
     tile_size: pygame.math.Vector2 = Field(default_factory=lambda: pygame.math.Vector2(32, 32))
+    npcs: List[NPC] = Field(default_factory=list)  # Add NPCs list
 
     class Config:
         arbitrary_types_allowed = True
@@ -55,9 +58,16 @@ class World(BaseModel):
             print(f"Error loading map: {e}")
             self.tiled_map = None
 
+    def add_npc(self, position: pygame.math.Vector2) -> None:
+        """Add a new NPC to the world"""
+        self.npcs.append(create_random_npc(position))
+
+
     def update(self, dt: float):
-        if self.tiled_map:
+        if self.tiled_map:  # * if map is loaded...
             self.tiled_map.group.update(dt)
+            for npc in self.npcs: npc.update(dt)
+            pass
 
 # ========================== WorldManager Class ==========================
 
@@ -75,7 +85,7 @@ class WorldManager(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
-        # self._initialize_debug_ui()
+        self._initialize_debug_ui()
 
     def create_world(self, name: str, map_file: str) -> None:
         new_world = World(map_file=map_file)
@@ -88,23 +98,34 @@ class WorldManager(BaseModel):
             )
             self.player.position = pygame.math.Vector2(300, 300)
 
+        def gen_random_npc():
+            pos = pygame.math.Vector2(
+                random.randint(0, int(new_world.size.x * new_world.tile_size.x)),
+                random.randint(0, int(new_world.size.y * new_world.tile_size.y))
+                )
+            new_world.add_npc(pos)
+
+        for _ in range(5):
+            gen_random_npc()
+
     def update(self, dt: float):
+        if not self.current_world: return
+
         # Handle keyboard input
         keys = pygame.key.get_pressed()
         # Update player
         self.player.update(dt, keys)
-
-
 
         camera_dx = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]
         camera_dy = keys[pygame.K_DOWN] - keys[pygame.K_UP]
         speed_multiplier = 4 if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) else 1.5
         self.camera.move(camera_dx * speed_multiplier, camera_dy * speed_multiplier, dt)
 
-        if self.current_world: 
-            self.current_world.update(dt)
-            
-        # self._update_debug_info()
+        # Update world
+        self.current_world.update(dt)
+
+        # * Update debug UI
+        self._update_debug_info()
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -117,6 +138,16 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.center((cam_x + cam_width // 2, cam_y + cam_height // 2))
         self.current_world.tiled_map.group.draw(surface)
 
+        # Draw NPCs
+        for npc in self.current_world.npcs:
+            npc.draw(surface, self.camera)
+
+        # Create an NPC at a specific position
+        # npc_pos = pygame.math.Vector2(500, 300)
+        # npc = create_random_npc(npc_pos)
+        # # Handle interaction
+        # dialogue = npc.interact()
+
         if self.player:
             self.player.draw(surface, self.camera)
             self.player.reputation.draw(surface, (10, 10))
@@ -127,7 +158,6 @@ class WorldManager(BaseModel):
 
         # * Draw debug UI if initialized
         if self.debug_ui: self.debug_ui.draw(surface)
-
 
 
     # ? Debug UI methods ----------------------------------------------------------------------
@@ -154,8 +184,7 @@ class WorldManager(BaseModel):
 
     def _update_debug_info(self):
         """Update debug UI with current game state"""
-        if not self.debug_ui or not self.current_world:
-            return
+        if not self.debug_ui or not self.current_world: return
 
         world = self.current_world
         debug_data = {
@@ -171,7 +200,7 @@ class WorldManager(BaseModel):
             },
             "player": {
                 "Position": f"({int(self.player.position.x)}, {int(self.player.position.y)})",
-                "Health": f"{self.player.health}/{self.player.max_health}"
+                "Reputation:": f"{self.player.reputation.get_status()} ({self.player.reputation.value:.2f})"
             }
         }
         self.debug_ui.update(debug_data)

@@ -11,13 +11,11 @@ class Engine(BaseModel):
     display_surface: Optional[pygame.Surface] = Field(default=None)
     world_manager: WorldManager = Field(default_factory=WorldManager)
     clock: pygame.time.Clock = Field(default_factory=pygame.time.Clock)
-    # ui: Optional[GameUI] = Field(default=None)  # Add GameUI field
 
     class Config:
         arbitrary_types_allowed = True
 
     def initialize_display(self, surface: pygame.Surface):
-        # Initialize the display surface and the world manager
         self.display_surface = surface
         # todo: Change the map file to 'big-map.tmx' to test the big map
         self.world_manager.create_world("main", 'big-map.tmx')
