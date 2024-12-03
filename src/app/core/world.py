@@ -1,10 +1,14 @@
+# stdlib
+from typing import Dict, Optional
+# third party
 import pygame
 import pytmx
 import pyscroll
 from pydantic import BaseModel, Field
-from typing import Dict, Optional
-from app.camera import Camera
-from app.entities import Player
+# local
+from app.core.camera import Camera
+from app.game.player import Player
+from layout.ui.debug import create_debug_ui, DebugUI
 from utils import AssetManager
 
 # ========================== TiledMap Class ==========================
@@ -56,22 +60,21 @@ class World(BaseModel):
             self.tiled_map.group.update(dt)
 
 # ========================== WorldManager Class ==========================
+
 class WorldManager(BaseModel):
+    """Manages game worlds, camera, player, and debug UI"""
     worlds: Dict[str, World] = Field(default_factory=dict)
     current_world: Optional[World] = Field(default=None)
     camera: Camera = Field(default_factory=Camera)
     player: Player = Field(default_factory=Player)
-    debug_header_font: Optional[pygame.font.Font] = Field(default=None)
-    debug_detail_font: Optional[pygame.font.Font] = Field(default=None)
+    debug_ui: Optional[DebugUI] = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, **data):
         super().__init__(**data)
-        pygame.font.init()
-        self.debug_header_font = pygame.font.Font(AssetManager.get_font("CascadiaCode.ttf"), 18)
-        self.debug_detail_font = pygame.font.Font(AssetManager.get_font("CascadiaCodeItalic.ttf"), 14)
+        self._initialize_debug_ui()
 
     def create_world(self, name: str, map_file: str) -> None:
         new_world = World(map_file=map_file)
@@ -96,6 +99,8 @@ class WorldManager(BaseModel):
 
         if self.current_world: 
             self.current_world.update(dt)
+            
+        self._update_debug_info()
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -109,38 +114,53 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.draw(surface)
 
         self.player.draw(surface, self.camera)
+        
+        # Draw debug UI if initialized
+        if self.debug_ui:
+            self.debug_ui.draw(surface)
 
-    def draw_debug(self, surface: pygame.Surface, dt: float):
-        if not self.current_world:
+    # ? Debug UI methods ----------------------------------------------------------------------
+
+    def _initialize_debug_ui(self):
+        """Initialize the debug UI with initial empty data structure"""
+        initial_debug_data = {
+            "world": {
+                "Name": "",
+                "Size": "",
+                "Tile Size": "",
+                "Pixels": ""
+            },
+            "camera": {
+                "Position": "",
+                "Zoom": ""
+            },
+            "player": {
+                "Position": "",
+                "Health": ""
+            }
+        }
+        self.debug_ui = create_debug_ui(initial_debug_data)
+
+    def _update_debug_info(self):
+        """Update debug UI with current game state"""
+        if not self.debug_ui or not self.current_world:
             return
 
         world = self.current_world
-        debug_info = [
-            ("World", [
-                f"Name: {world.map_file.split('.')[0]}",
-                f"Size: {int(world.size[0])}x{int(world.size[1])} tiles",
-                f"Tile Size: {int(world.tile_size[0])}x{int(world.tile_size[1])} px",
-                f"Pixels: {int(world.size[0] * world.tile_size[0])}x{int(world.size[1] * world.tile_size[1])} px",
-            ]),
-            ("Camera", [
-                f"Position: ({int(self.camera.position.x)}, {int(self.camera.position.y)})",
-                f"Zoom: {self.camera.zoom:.2f}",
-            ]),
-            ("Player", [
-                f"Position: ({int(self.player.position.x)}, {int(self.player.position.y)})",
-                f"Health: {self.player.health}/{self.player.max_health}",
-            ])
-        ]
-
-        y_offset = 40
-        for section, items in debug_info:
-            header_surface = self.debug_header_font.render(section, True, (64, 128, 96))
-            surface.blit(header_surface, (10, y_offset))
-            y_offset += 24
-
-            for item in items:
-                detail_surface = self.debug_detail_font.render(item, True, (255, 255, 255))
-                surface.blit(detail_surface, (20, y_offset))
-                y_offset += 16
-
-            y_offset += 5
+        debug_data = {
+            "world": {
+                "Name": world.map_file.split('.')[0],
+                "Size": f"{int(world.size[0])}x{int(world.size[1])} tiles",
+                "Tile Size": f"{int(world.tile_size[0])}x{int(world.tile_size[1])} px",
+                "Pixels": f"{int(world.size[0] * world.tile_size[0])}x{int(world.size[1] * world.tile_size[1])} px"
+            },
+            "camera": {
+                "Position": f"({int(self.camera.position.x)}, {int(self.camera.position.y)})",
+                "Zoom": f"{self.camera.zoom:.2f}"
+            },
+            "player": {
+                "Position": f"({int(self.player.position.x)}, {int(self.player.position.y)})",
+                "Health": f"{self.player.health}/{self.player.max_health}"
+            }
+        }
+        self.debug_ui.update(debug_data)

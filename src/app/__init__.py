@@ -3,7 +3,7 @@ import pygame
 from project import AppData
 from project.settings.constants import GameInfo  # import global variables
 from utils import AssetManager
-from app.engine import Engine
+from app.core.engine import Engine
 
 class App(BaseModel):
     app_data: AppData = Field(...)
