@@ -1,25 +1,24 @@
 import os
+from typing import Dict, Optional
 import pygame
-from pydantic import BaseModel, Field
-from typing import List, Optional
+from pydantic import Field
 
 from app.core.camera import Camera
 from app.core.entities.entities import Actor
-from app.core.entities.sprites import *
-from app.game.inventory import Inventory, Item
+from app.core.entities.sprites import AnimatedSprite, AnimationState, Direction
+from app.game.inventory import Inventory
+from app.game.abilities import Ability
+from app.game.reputation import Reputation
 from utils import AssetManager
 
-
 class Player(Actor):
-    health: int = Field(default=100)
-    max_health: int = Field(default=100)
-    sprite_sheet_path: str = Field(default="static\\player.png")
-    scale_factor: float = Field(default=4.0)
-    inventory: Inventory = Field(default_factory=Inventory)
-    gold: int = Field(default=0)
-    experience: int = Field(default=0)
-    level: int = Field(default=1)
+    sprite_sheet_path: str = Field("static\\player.png")
     sprite: Optional[AnimatedSprite] = Field(default=None)
+    scale_factor: float = Field(default=3.0)
+    
+    reputation: Reputation = Field(default_factory=Reputation)
+    inventory: Inventory = Field(default_factory=Inventory)
+    abilities: Dict[str, Ability] = Field(default_factory=dict)
 
     class Config:
         arbitrary_types_allowed = True
@@ -29,11 +28,21 @@ class Player(Actor):
         if self.sprite is None:
             self.sprite = AnimatedSprite()
         self.load_sprite_sheet()
+    #     self._initialize_abilities()
+
+    # def _initialize_abilities(self) -> None:
+    #     """Initialize basic abilities"""
+    #     self.abilities["attack"] = Ability(
+    #         name="attack",
+    #         cooldown=1.0,
+    #         animation_state=AnimationState.ATTACK
+    #     )
 
     def load_sprite_sheet(self):
         try:
-            img_path = AssetManager.get_image("static\\player.png")
-            if not os.path.exists(img_path): raise FileNotFoundError(f"Image file not found: {img_path}")
+            img_path = AssetManager.get_image(self.sprite_sheet_path)
+            if not os.path.exists(img_path):
+                raise FileNotFoundError(f"Image file not found: {img_path}")
             print(f"Image file exists: {img_path}")
 
             sprite_sheet = pygame.image.load(img_path)
@@ -84,13 +93,17 @@ class Player(Actor):
             print(f"Unexpected error loading player sprite sheet: {e}")
             self.create_fallback_sprite_sheet()
 
-    def create_fallback_sprite_sheet(self):
+    def _create_fallback_sprite(self) -> None:
+        """Create a basic fallback sprite if loading fails"""
         self.sprite.sprite_sheet = pygame.Surface((48, 48))
         self.sprite.sprite_sheet.fill((255, 0, 0))
         self.sprite.frame_size = (48, 48)
-        self.sprite.animations = {state: [(0, 0)] for state in AnimationState}
+        self.sprite.animations = {
+            state: [(0, 0)] for state in AnimationState
+        }
 
-    def update(self, dt: float, keys: pygame.key.ScancodeWrapper):
+    def update(self, dt: float, keys: pygame.key.ScancodeWrapper) -> None:
+        # Movement
         dx = keys[pygame.K_d] - keys[pygame.K_a]
         dy = keys[pygame.K_s] - keys[pygame.K_w]
         
@@ -100,49 +113,44 @@ class Player(Actor):
         else:
             self.sprite.current_state = AnimationState.IDLE
 
-        if keys[pygame.K_SPACE]:
-            self.attack()
+        # Abilities
+        if keys[pygame.K_SPACE]: self.use_ability("attack")
 
         self.move(dx, dy, dt)
         self.sprite.update(dt)
+        
+        # Update ability cooldowns
+        for ability in self.abilities.values():
+            ability.update(dt)
 
-    def draw(self, surface: pygame.Surface, camera: Camera):
-        if self.sprite and self.sprite.sprite_sheet:
-            current_frame = self.sprite.get_current_frame()
+    def draw(self, surface: pygame.Surface, camera: Camera) -> None:
+        if not self.sprite or not self.sprite.sprite_sheet:
+            return
             
-            scaled_size = (int(current_frame.get_width() * self.scale_factor),
-                         int(current_frame.get_height() * self.scale_factor))
-            scaled_frame = pygame.transform.scale(current_frame, scaled_size)
+        current_frame = self.sprite.get_current_frame()
+        scaled_size = (
+            int(current_frame.get_width() * self.scale_factor),
+            int(current_frame.get_height() * self.scale_factor)
+        )
+        scaled_frame = pygame.transform.scale(current_frame, scaled_size)
+        
+        screen_pos = camera.world_to_screen(self.position)
+        draw_pos = (
+            screen_pos[0] - scaled_size[0] // 2,
+            screen_pos[1] - scaled_size[1] // 2
+        )
+        
+        surface.blit(scaled_frame, draw_pos)
+
+    def use_ability(self, ability_name: str) -> bool:
+        """Use a named ability if it's available"""
+        if ability_name not in self.abilities:
+            return False
+
+        ability = self.abilities[ability_name]
+        if ability.is_ready():
+            # todo: Change the current asset to the ability's animation...
+            ability.trigger()
+            return True
             
-            screen_pos = camera.world_to_screen(self.position)
-            draw_pos = (screen_pos[0] - scaled_size[0] // 2,
-                       screen_pos[1] - scaled_size[1] // 2)
-            
-            surface.blit(scaled_frame, draw_pos)
-
-            # Draw health bar
-            health_bar_width = scaled_size[0] * (self.health / self.max_health)
-            health_bar_height = 5 * self.scale_factor
-            pygame.draw.rect(surface, (255, 0, 0), 
-                           (draw_pos[0], draw_pos[1] - health_bar_height - 2, scaled_size[0], health_bar_height))
-            pygame.draw.rect(surface, (0, 255, 0), 
-                           (draw_pos[0], draw_pos[1] - health_bar_height - 2, health_bar_width, health_bar_height))
-
-    def collect_item(self, item: Item) -> bool:
-        return self.inventory.add_item(item)
-
-    def attack(self):
-        self.sprite.current_state = AnimationState.ATTACK
-
-    def take_damage(self, amount: int):
-        self.health = max(0, self.health - amount)
-        if self.health == 0:
-            self.sprite.current_state = AnimationState.DEATH
-
-    def gain_experience(self, amount: int):
-        self.experience += amount
-        new_level = 1 + self.experience // 1000
-        if new_level > self.level:
-            self.level = new_level
-            self.max_health += 10
-            self.health = self.max_health
+        return False

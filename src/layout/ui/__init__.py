@@ -2,7 +2,7 @@ from typing import Dict, List, Tuple, Optional, Any
 import pygame
 from pydantic import BaseModel, Field
 from pygame import Surface, Rect
-from utils import AssetManager
+
 
 class UIColor(BaseModel):
     r: int = Field(default=0, ge=0, le=255)

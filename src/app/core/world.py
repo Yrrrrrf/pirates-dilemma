@@ -69,12 +69,13 @@ class WorldManager(BaseModel):
     player: Player = Field(default_factory=Player)
     debug_ui: Optional[DebugUI] = Field(default=None)
 
+
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, **data):
         super().__init__(**data)
-        self._initialize_debug_ui()
+        # self._initialize_debug_ui()
 
     def create_world(self, name: str, map_file: str) -> None:
         new_world = World(map_file=map_file)
@@ -100,7 +101,7 @@ class WorldManager(BaseModel):
         if self.current_world: 
             self.current_world.update(dt)
             
-        self._update_debug_info()
+        # self._update_debug_info()
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -116,8 +117,11 @@ class WorldManager(BaseModel):
         self.player.draw(surface, self.camera)
         
         # Draw debug UI if initialized
-        if self.debug_ui:
-            self.debug_ui.draw(surface)
+        if self.debug_ui: self.debug_ui.draw(surface)
+
+        self.player.reputation.draw(surface, (10, 10))
+        self.player.reputation.modify(2)
+
 
     # ? Debug UI methods ----------------------------------------------------------------------
 
