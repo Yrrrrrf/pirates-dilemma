@@ -50,10 +50,23 @@ class App(BaseModel):
                 # * Handle key-press events...
                 case pygame.KEYDOWN:
                     match event.key:
+                        # ^ App related key events...
                         case pygame.K_ESCAPE: self.running = False
                         case pygame.K_F1: print("Impl: F1 to toggle editor mode")
                         case pygame.K_F11: self._toggle_fullscreen()
+
+                        # ^ Engine related key events...
+                        # todo: Add some 'pause' functionality on the [`engine`]
+
+                        # ^ Player related key events...
                         case pygame.K_i: self.engine.world_manager.player.inventory.toggle_visibility()
+
+                        # ^ Dialog System related...
+                        case pygame.K_e: self.engine.world_manager.npc_manager.handle_interaction(self.engine.world_manager.player)
+                        case pygame.K_SPACE: 
+                            match self.engine.world_manager.npc_manager.dialogue_system.dialogue_box.is_complete():
+                                case True: self.engine.world_manager.npc_manager.dialogue_system.advance_dialogue()
+                                case False: self.engine.world_manager.npc_manager.dialogue_system.dialogue_box.complete_text()                        
                         case _: pass
                 # * Handle mouse events...
                 case pygame.MOUSEBUTTONDOWN:

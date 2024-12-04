@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 # local
 from app.core.camera import Camera
 from app.core.entities.npc import NPC, create_random_npc
+from app.core.entities.npc_manager import NPCManager
 from app.game.player import Player
 from layout.ui.debug import create_debug_ui, DebugUI
 from utils import AssetManager
@@ -78,14 +79,14 @@ class WorldManager(BaseModel):
     camera: Camera = Field(default_factory=Camera)
     player: Player = Field(default_factory=Player)
     debug_ui: Optional[DebugUI] = Field(default=None)
-
+    npc_manager: Optional[NPCManager] = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, **data):
         super().__init__(**data)
-        self._initialize_debug_ui()
+        # self._initialize_debug_ui()
 
     def create_world(self, name: str, map_file: str) -> None:
         new_world = World(map_file=map_file)
@@ -98,15 +99,7 @@ class WorldManager(BaseModel):
             )
             self.player.position = pygame.math.Vector2(300, 300)
 
-        def gen_random_npc():
-            pos = pygame.math.Vector2(
-                random.randint(0, int(new_world.size.x * new_world.tile_size.x)),
-                random.randint(0, int(new_world.size.y * new_world.tile_size.y))
-                )
-            new_world.add_npc(pos)
-
-        for _ in range(5):
-            gen_random_npc()
+        self.npc_manager = NPCManager()
 
     def update(self, dt: float):
         if not self.current_world: return
@@ -121,11 +114,17 @@ class WorldManager(BaseModel):
         speed_multiplier = 4 if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) else 1.5
         self.camera.move(camera_dx * speed_multiplier, camera_dy * speed_multiplier, dt)
 
-        # Update world
+        # ^ Update world
         self.current_world.update(dt)
+
+        # ^ Handle player interaction with NPCs
+        # Update NPC manager with player position
+        if self.npc_manager:
+            self.npc_manager.update(dt, self.player.position)
 
         # * Update debug UI
         self._update_debug_info()
+
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -138,20 +137,12 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.center((cam_x + cam_width // 2, cam_y + cam_height // 2))
         self.current_world.tiled_map.group.draw(surface)
 
-        # Draw NPCs
-        for npc in self.current_world.npcs:
-            npc.draw(surface, self.camera)
-
-        # Create an NPC at a specific position
-        # npc_pos = pygame.math.Vector2(500, 300)
-        # npc = create_random_npc(npc_pos)
-        # # Handle interaction
-        # dialogue = npc.interact()
+        # Draw NPCs and interaction hints
+        if self.npc_manager: self.npc_manager.draw(surface, self.camera)
 
         if self.player:
             self.player.draw(surface, self.camera)
             self.player.reputation.draw(surface, (10, 10))
-            self.player.reputation.modify(0.2)
 
             # Draw inventory
             self.player.inventory.draw(surface)

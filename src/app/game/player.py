@@ -135,11 +135,7 @@ class Player(Actor):
         scaled_frame = pygame.transform.scale(current_frame, scaled_size)
         
         screen_pos = camera.world_to_screen(self.position)
-        draw_pos = (
-            screen_pos[0] - scaled_size[0] // 2,
-            screen_pos[1] - scaled_size[1] // 2
-        )
-        
+        draw_pos = (screen_pos[0] - scaled_size[0] // 2, screen_pos[1] - scaled_size[1] // 2)
         surface.blit(scaled_frame, draw_pos)
 
     def use_ability(self, ability_name: str) -> bool:

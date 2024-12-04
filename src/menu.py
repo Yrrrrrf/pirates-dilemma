@@ -98,7 +98,7 @@ def run_menu() -> None:
 
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
+            if event.type == pygame.QUIT:
                 pygame.quit()  # * Quit the game
                 sys.exit()  # * Exit the program
             menu.handle_event(event)
