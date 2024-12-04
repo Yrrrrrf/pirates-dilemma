@@ -45,3 +45,6 @@ class LanguageManager(BaseModel):
     @classmethod
     def get_all_translations(cls, language: Language) -> Dict[str, str]:
         return {key: values[language.value] for key, values in cls._translations.items()}
+
+    def set_language(self, language: Language) -> None:
+        self.language = language

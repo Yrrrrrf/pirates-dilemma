@@ -31,3 +31,19 @@ class Engine(BaseModel):
 
         pygame.display.flip()
         return True
+
+    def handle_keydown(self, event: pygame.event.Event):
+        match event.key:
+            case pygame.K_i: self.world_manager.player.inventory.toggle_visibility()
+            case pygame.K_e: self.world_manager.npc_manager.handle_interaction(self.world_manager.player)
+            case pygame.K_SPACE:  # dialogue system...
+                dialogue_box = self.world_manager.npc_manager.dialogue_system.dialogue_box
+                match dialogue_box.is_complete():
+                    case True: self.world_manager.npc_manager.dialogue_system.advance_dialogue()
+                    case False: dialogue_box.complete_text()
+
+    def handle_click(self, event: pygame.event.Event):
+        match event.button:
+            case 1: self.world_manager.player.inventory.handle_click(event.pos)
+            case 2: print("Impl: Middle mouse button click")
+            case 3: print("Impl: Right mouse button click")

@@ -97,24 +97,24 @@ class NPCManager(BaseModel):
                 npc_type=NPCType.MERCHANT,
                 dialogue_keys=[f"merchant-{i:02d}" for i in range(1, 6)]
             ),
-            # # Harbor Master
-            # NPC(
-            #     position=Vector2(150, 240),
-            #     npc_type=NPCType.HARBOR_MASTER,
-            #     dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]
-            # ),
-            # # Tavern Keeper
-            # NPC(
-            #     position=Vector2(600, 400),
-            #     npc_type=NPCType.TAVERN_KEEPER,
-            #     dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]
-            # ),
-            # # Wandering Merchant
-            # NPC(
-            #     position=Vector2(200, 500),
-            #     npc_type=NPCType.WANDERING_MERCHANT,
-            #     dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)]
-            # )
+            # Harbor Master
+            NPC(
+                position=Vector2(150, 240),
+                npc_type=NPCType.HARBOR_MASTER,
+                dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]
+            ),
+            # Tavern Keeper
+            NPC(
+                position=Vector2(600, 400),
+                npc_type=NPCType.TAVERN_KEEPER,
+                dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]
+            ),
+            # Wandering Merchant
+            NPC(
+                position=Vector2(200, 500),
+                npc_type=NPCType.WANDERING_MERCHANT,
+                dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)]
+            )
         ]
         self.npcs.extend(test_npcs)
 

@@ -1,9 +1,6 @@
 from pydantic import BaseModel, Field
-from typing import Tuple
-
-from project.settings.lang import LanguageManager
 from project.theme.theme import Theme, Themes
-from project.settings import Settings
+from project.settings import *
 from utils import AssetManager
 
 
@@ -13,18 +10,23 @@ class AppData(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True  # it allows the use of arbitrary types in the model
-        # so, it can be used with pygame objects
 
-    def get_screen_size(self) -> Tuple[int, int]:
-        return (self.settings.width, self.settings.height)
+    def __init__(self, **data):
+        super().__init__(**data)
 
 
-app_data = AppData()
-
-# todo: Look for some way to load the translations from the settings file...
+app_data: AppData = AppData()
 
 menu_lang_manager = LanguageManager(language=app_data.settings.language)
-menu_lang_manager.load_translations(file_path=AssetManager.get_script("menu.json"))
-
 npc_lang_manager = LanguageManager(language=app_data.settings.language)
+
+menu_lang_manager.load_translations(file_path=AssetManager.get_script("menu.json"))
 npc_lang_manager.load_translations(file_path=AssetManager.get_script("npc-dialogues.json"))
+
+def set_app_lang(lang: Language) -> None:
+    app_data.settings.language = lang
+    menu_lang_manager.set_language(app_data.settings.language)
+    npc_lang_manager.set_language(app_data.settings.language)
+
+# todo: Somehow re-strucutre the code to `def app_data.set_lang(lang: Language)`
+# todo: to handle it using the same instance of `app_data` 

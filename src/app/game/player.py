@@ -43,11 +43,11 @@ class Player(Actor):
             img_path = AssetManager.get_image(self.sprite_sheet_path)
             if not os.path.exists(img_path):
                 raise FileNotFoundError(f"Image file not found: {img_path}")
+
             print(f"Image file exists: {img_path}")
+            sprite_sheet = pygame.image.load(img_path).convert_alpha()  # Use convert_alpha() instead of convert()
 
-            sprite_sheet = pygame.image.load(img_path)
-
-            if not isinstance(sprite_sheet, pygame.Surface):  # Check if the surface is valid
+            if not isinstance(sprite_sheet, pygame.Surface):
                 raise TypeError(f"Loaded object is not a pygame.Surface. Got {type(sprite_sheet)}")
 
             # Get and print surface information
@@ -55,16 +55,6 @@ class Player(Actor):
             print(f"\tImage color key: {sprite_sheet.get_colorkey()}")
             print(f"\tImage alpha: {sprite_sheet.get_alpha()}")
             print(f"\tImage bit size: {sprite_sheet.get_bitsize()}")
-
-            try:  # Try to optimize the surface for display
-                sprite_sheet = sprite_sheet.convert()  # Convert to the same pixel format as the display
-            except pygame.error:
-                print("Failed to convert surface, using original")
-
-            # # Set color key for transparency if needed
-            # if sprite_sheet.get_alpha() is None:
-            #     sprite_sheet.set_colorkey((0, 0, 0))  # Assuming black is the transparent color
-            #     print("Set color key for transparency")
 
             # Determine frame size and animation layout
             sheet_width, sheet_height = sprite_sheet.get_size()
@@ -88,15 +78,15 @@ class Player(Actor):
             
         except (pygame.error, FileNotFoundError, TypeError) as e:
             print(f"Error loading player sprite sheet: {e}")
-            self.create_fallback_sprite_sheet()
+            self.create_fallback_sprite()
         except Exception as e:
             print(f"Unexpected error loading player sprite sheet: {e}")
-            self.create_fallback_sprite_sheet()
+            self.create_fallback_sprite()
 
-    def _create_fallback_sprite(self) -> None:
+    def create_fallback_sprite(self):
         """Create a basic fallback sprite if loading fails"""
-        self.sprite.sprite_sheet = pygame.Surface((48, 48))
-        self.sprite.sprite_sheet.fill((255, 0, 0))
+        self.sprite.sprite_sheet = pygame.Surface((48, 48), pygame.SRCALPHA)  # Add SRCALPHA flag
+        self.sprite.sprite_sheet.fill((255, 0, 0, 128))  # Add alpha value
         self.sprite.frame_size = (48, 48)
         self.sprite.animations = {
             state: [(0, 0)] for state in AnimationState

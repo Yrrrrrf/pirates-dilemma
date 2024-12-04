@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from pygame import Surface, font
 
 from app.core.entities.npc import NPC
+from project import npc_lang_manager
 from utils import AssetManager
 
 class DialogueMessage(BaseModel):
@@ -156,8 +157,16 @@ class DialogueSystem(BaseModel):
         print(f"Starting dialogue with {npc.name} ({npc.npc_type.value})")
 
         m: List[DialogueMessage] = []
-        for message in npc.dialogues:
+        for key in npc.dialogue_keys:
+            message = npc_lang_manager.get_text(key)
             m.append(DialogueMessage(text=message, speaker=npc.name, portrait_path=npc.sprite_sheet_path))
+
+        # self.dialogues = []
+        # for key in self.dialogue_keys:
+        #     self.dialogues.append(npc_lang_manager.get_text(key))
+
+        # for message in npc.dialogues:
+        #     m.append(DialogueMessage(text=message, speaker=npc.name, portrait_path=npc.sprite_sheet_path))
 
         self.messages = m
         self.current_message_index = 0

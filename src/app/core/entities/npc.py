@@ -24,13 +24,10 @@ def get_random_asset() -> str:
     return f"static\\npc\\{gender}{random.randint(1, 2 if gender == "Female" else 4)}.png"
 
 
-
-
 class NPC(Actor):
     npc_type: NPCType = Field(...)
     name: str = Field(default="Some NPC")
     dialogue_keys: List[str]  # e.g., ["dialogue_1", "dialogue_2", etc.]
-    dialogues: List[str] = Field(default_factory=list)
     current_dialogue_index: int = Field(default=0)
 
     # todo: Fix the asset loader...
@@ -48,9 +45,6 @@ class NPC(Actor):
         # self.name = f"{self.sprite_sheet_path.split('\\')[-1].split('.')[0].title()}-{random.randint(1, 100):02d}"
         self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
 
-        self.dialogues = []
-        for key in self.dialogue_keys:
-            self.dialogues.append(npc_lang_manager.get_text(key))
 
 
     def _initialize_random_npc(self) -> None:

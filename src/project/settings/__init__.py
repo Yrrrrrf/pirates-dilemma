@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Tuple
 
-from project.settings.lang import Language
+from project.settings.lang import *
 
 from pydantic import BaseModel, Field
 from typing import Tuple
@@ -19,6 +19,11 @@ class Settings(BaseModel):
     fullscreen: bool = Field(default=False)
     fps: int = Field(default=72, ge=30, le=144)
 
+
+    def __init__(self, **data):
+        super().__init__(**data)
+
+
     def update(self, **kwargs):
         """Update the game settings with new values."""
         for key, value in kwargs.items():
@@ -28,3 +33,6 @@ class Settings(BaseModel):
     def get_screen_size(self) -> Tuple[int, int]:
         """Return the screen size as a tuple."""
         return self.width, self.height
+
+    def get_lang(self) -> LanguageManager:
+        return self.language
