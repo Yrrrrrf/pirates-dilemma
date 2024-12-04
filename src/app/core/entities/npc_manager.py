@@ -4,10 +4,10 @@ from pydantic import BaseModel, Field
 from pygame import Surface, font
 from pygame.math import Vector2
 
-from app.core.entities.npc import NPC
+from app.core.entities.npc import NPC, NPCType
 from app.core.camera import Camera
 from app.game.player import Player
-from app.rules.dialogue_system import DialogueMessage, DialogueSystem
+from app.rules.dialogue_system import DialogueSystem
 from utils import AssetManager
 
 
@@ -89,17 +89,37 @@ class NPCManager(BaseModel):
         self._add_test_npcs()
 
     def _add_test_npcs(self) -> None:
-        # Add some test NPCs at different positions
+        """Add test NPCs with their dialogue keys"""
         test_npcs = [
-            NPC(position=Vector2(400, 300), dialogue="Hello, I'm a merchant!"),
-            NPC(position=Vector2(600, 400), dialogue="I've heard rumors about pirates..."),
-            NPC(position=Vector2(200, 500), dialogue="Welcome to our village!")
+            # Merchant at the market
+            NPC(
+                position=Vector2(400, 300),
+                npc_type=NPCType.MERCHANT,
+                dialogue_keys=[f"merchant-{i:02d}" for i in range(1, 6)]
+            ),
+            # # Harbor Master
+            # NPC(
+            #     position=Vector2(150, 240),
+            #     npc_type=NPCType.HARBOR_MASTER,
+            #     dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]
+            # ),
+            # # Tavern Keeper
+            # NPC(
+            #     position=Vector2(600, 400),
+            #     npc_type=NPCType.TAVERN_KEEPER,
+            #     dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]
+            # ),
+            # # Wandering Merchant
+            # NPC(
+            #     position=Vector2(200, 500),
+            #     npc_type=NPCType.WANDERING_MERCHANT,
+            #     dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)]
+            # )
         ]
         self.npcs.extend(test_npcs)
 
     def update(self, dt: float, player_pos: Vector2) -> None:
-        for npc in self.npcs:
-            npc.update(dt)
+        for npc in self.npcs: npc.update(dt)
 
         # Find closest NPC and update interaction hint
         self.closest_npc = self._get_closest_npc(player_pos)
@@ -113,11 +133,8 @@ class NPCManager(BaseModel):
     def handle_interaction(self, 
         player: Player
     ) -> None:
-        messages = [
-            "Welcome, traveler! I have many fine wares for sale.",
-            "Would you like to see what I have in stock? I've got some rare items that might interest you.",
-        ]
-        self.dialogue_system.start_dialogue(messages, self.closest_npc)
+        if not self.closest_npc: return  # * No NPC in range (early exit)
+        self.dialogue_system.start_dialogue(self.closest_npc)
         player.reputation.modify(2)
 
     def draw(self, surface: Surface, camera: Camera) -> None:

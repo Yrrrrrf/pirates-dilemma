@@ -9,7 +9,8 @@ from typing import Tuple
 
 class Settings(BaseModel):
     """Represents the adjustable settings of the game."""
-    language: Language = Field(default=Language.ENGLISH)
+    # language: Language = Field(default=Language.ENGLISH)
+    language: Language = Field(default=Language.SPANISH)
     width: int = Field(default=1080, ge=640, le=3840)
     height: int = Field(default=720, ge=480, le=2160)
     tile_size: int = Field(default=32, ge=16, le=128)

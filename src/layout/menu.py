@@ -4,13 +4,7 @@ from typing import Callable, Dict, Optional, Tuple
 from pygame import Rect, Surface
 import pygame
 
-from project.settings.lang import LanguageManager
-from project import app_data
-from utils import AssetManager
-
-menu_lang_manager = LanguageManager(language=app_data.settings.language)
-menu_lang_manager.load_translations(file_path=AssetManager.get_script("menu.json"))
-
+from project import menu_lang_manager
 
 @dataclass
 class MenuTheme:

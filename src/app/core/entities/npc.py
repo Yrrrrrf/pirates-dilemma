@@ -1,23 +1,40 @@
 import random
 from enum import Enum
-import pygame
+from typing import List
 from pydantic import Field
 
-from app.core.camera import Camera
 from app.core.entities import *
 from app.core.entities.sprites import AnimatedSprite, AnimationState
+from project import npc_lang_manager
+
 from utils import AssetManager
 
 class NPCType(Enum):
-    MALE = "male"
-    FEMALE = "female"
-    ELDER = "elder"
+    # SOME COMMON GUY...
+    CIVILIAN = "Civilian"
+
+    MERCHANT = "Merchant"
+    HARBOR_MASTER = "Harbor Master"
+    TAVERN_KEEPER = "Tavern Keeper"
+    WANDERING_MERCHANT = "Wandering Merchant"
+
+def get_random_asset() -> str:
+    """Get a random asset path for the NPC sprite"""
+    gender = random.choice(["Male", "Female"])
+    return f"static\\npc\\{gender}{random.randint(1, 2 if gender == "Female" else 4)}.png"
+
+
+
 
 class NPC(Actor):
-    npc_type: NPCType = Field(default=NPCType.MALE)
-    dialogue: str = Field(default="Hello, I'm an NPC!")
+    npc_type: NPCType = Field(...)
+    name: str = Field(default="Some NPC")
+    dialogue_keys: List[str]  # e.g., ["dialogue_1", "dialogue_2", etc.]
+    dialogues: List[str] = Field(default_factory=list)
+    current_dialogue_index: int = Field(default=0)
+
     # todo: Fix the asset loader...
-    sprite_sheet_path: str = Field(default="static\\npc\\Femalse1.png")
+    sprite_sheet_path: str = Field(default_factory=get_random_asset)
     sprite_type_index: int = Field(default=0)  # 0-3 for each type
     scale_factor: float = Field(default=3.0)
 
@@ -25,6 +42,16 @@ class NPC(Actor):
         super().__init__(**data)
         self.sprite = AnimatedSprite()
         self._initialize_random_npc()
+
+        self.npc_type = data.get("npc_type", NPCType.CIVILIAN)
+
+        # self.name = f"{self.sprite_sheet_path.split('\\')[-1].split('.')[0].title()}-{random.randint(1, 100):02d}"
+        self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
+
+        self.dialogues = []
+        for key in self.dialogue_keys:
+            self.dialogues.append(npc_lang_manager.get_text(key))
+
 
     def _initialize_random_npc(self) -> None:
         """Initialize NPC with random appearance from available types"""
@@ -96,32 +123,3 @@ class NPC(Actor):
         )
         
         surface.blit(scaled_frame, draw_pos)
-        
-    def interact(self) -> str:
-        """Handle interaction with the NPC"""
-        self.sprite.current_state = AnimationState.IDLE
-        return self.dialogue
-
-def create_random_npc(position: pygame.math.Vector2) -> NPC:
-    """Factory function to create a random NPC at the specified position"""
-    dialogues = {
-        NPCType.MALE: [
-            "Ahoy, matey! Fine weather for sailing, eh?",
-            "Watch yer step around these parts, stranger.",
-            "Care to hear a tale of the high seas?"
-        ],
-        NPCType.FEMALE: [
-            "Welcome to our humble port, traveler.",
-            "The market's just around the corner.",
-            "Mind your manners in this establishment."
-        ],
-        NPCType.ELDER: [
-            "I've seen many a ship come and go in my time...",
-            "The old legends speak of a great treasure...",
-            "In all my years, I've never seen such strange times."
-        ]
-    }
-
-    npc = NPC(position=position)
-    npc.dialogue = random.choice(dialogues[npc.npc_type])
-    return npc

@@ -11,6 +11,7 @@ from utils import AssetManager
 from layout.card import Card
 from layout.menu import MenuTheme, menu_lang_manager
 from project.settings.lang import Language
+from project import app_data
 
 
 class GameMenu:
@@ -59,7 +60,8 @@ class GameMenu:
         return cards
 
     def _change_lang(self, lang: Language) -> None:
-        menu_lang_manager.language = lang
+        app_data.settings.language = lang
+        menu_lang_manager.language = app_data.settings.language
         self.show_card('main')  # No need to reinitialize cards - they will automatically use the new lang
 
     def show_card(self, card_name: str) -> None:

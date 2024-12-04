@@ -76,6 +76,13 @@ class DialogueBox(BaseModel):
         portrait_size = 120
         text_start_x = self.padding
         
+        # todo: Improve this section to now:
+        # 0. Select just the npc section, not all the spread sheet (as it is now)
+        # for now it shows the complete asset image, so it is not the best way to show the portrait
+        # 1. Load the portrait image from the path
+        # 2. Scale the portrait to the correct size
+        # 3. Draw the portrait on the box surface...
+        # 4. Update the text start position based on the portrait size
         if message.portrait_path:
             try:
                 portrait = pygame.image.load(AssetManager.get_image(message.portrait_path))
@@ -125,13 +132,15 @@ class DialogueBox(BaseModel):
         box_x = (screen_width - self.width) // 2
         box_y = screen_height - self.height - 20
         surface.blit(box_surface, (box_x, box_y))
-    
+
     def is_complete(self) -> bool:
         return self._is_complete
-    
+
     def complete_text(self) -> None:
         self._text_progress = len(self._current_text)
         self._is_complete = True
+
+
 
 class DialogueSystem(BaseModel):
     active: bool = Field(default=False)
@@ -142,32 +151,30 @@ class DialogueSystem(BaseModel):
     class Config:
         arbitrary_types_allowed = True
     
-    def start_dialogue(self, messages: List[str], npc: NPC) -> None:
-        npc_name = npc.sprite_sheet_path.split('\\')[-1].split('.')[0]
-        print(f"Starting dialogue with {npc_name}")
-        m: List[DialogueMessage] = [DialogueMessage(
-            text=message, 
-            speaker=f"{npc_name}-{random.randint(1, 100):02d}",
-            portrait_path=npc.sprite_sheet_path
-        ) for message in messages]
+    def start_dialogue(self, npc: NPC) -> None:
+
+        print(f"Starting dialogue with {npc.name} ({npc.npc_type.value})")
+
+        m: List[DialogueMessage] = []
+        for message in npc.dialogues:
+            m.append(DialogueMessage(text=message, speaker=npc.name, portrait_path=npc.sprite_sheet_path))
 
         self.messages = m
         self.current_message_index = 0
         self.active = True
 
-    
     def update(self, dt: float) -> None:
         if not self.active or self.current_message_index >= len(self.messages):
             return
             
         current_message = self.messages[self.current_message_index]
         self.dialogue_box.update(dt, current_message.text)
-    
+
     def advance_dialogue(self) -> None:
         self.current_message_index += 1
         if self.current_message_index >= len(self.messages):
             self.active = False
-    
+
     def draw(self, surface: Surface) -> None:
         if not self.active or self.current_message_index >= len(self.messages):
             return

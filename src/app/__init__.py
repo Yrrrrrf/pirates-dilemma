@@ -4,6 +4,7 @@ from project import AppData
 from project.settings.constants import GameInfo  # import global variables
 from utils import AssetManager
 from app.core.engine import Engine
+from project import app_data
 
 class App(BaseModel):
     app_data: AppData = Field(...)
@@ -66,7 +67,7 @@ class App(BaseModel):
                         case pygame.K_SPACE: 
                             match self.engine.world_manager.npc_manager.dialogue_system.dialogue_box.is_complete():
                                 case True: self.engine.world_manager.npc_manager.dialogue_system.advance_dialogue()
-                                case False: self.engine.world_manager.npc_manager.dialogue_system.dialogue_box.complete_text()                        
+                                case False: self.engine.world_manager.npc_manager.dialogue_system.dialogue_box.complete_text()
                         case _: pass
                 # * Handle mouse events...
                 case pygame.MOUSEBUTTONDOWN:

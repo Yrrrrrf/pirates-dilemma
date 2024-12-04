@@ -8,7 +8,7 @@ import pyscroll
 from pydantic import BaseModel, Field
 # local
 from app.core.camera import Camera
-from app.core.entities.npc import NPC, create_random_npc
+from app.core.entities.npc import NPC
 from app.core.entities.npc_manager import NPCManager
 from app.game.player import Player
 from layout.ui.debug import create_debug_ui, DebugUI
@@ -58,11 +58,6 @@ class World(BaseModel):
         except Exception as e:
             print(f"Error loading map: {e}")
             self.tiled_map = None
-
-    def add_npc(self, position: pygame.math.Vector2) -> None:
-        """Add a new NPC to the world"""
-        self.npcs.append(create_random_npc(position))
-
 
     def update(self, dt: float):
         if self.tiled_map:  # * if map is loaded...

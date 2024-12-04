@@ -1,0 +1,169 @@
+{
+    "merchant-01": [
+        "Welcome to my humble shop, traveler!",
+        "¡Bienvenido a mi humilde tienda, viajero!"
+    ],
+    "merchant-02": [
+        "I've got rare items from distant lands. Would you like to see my wares?",
+        "Tengo artículos raros de tierras lejanas. ¿Te gustaría ver mis mercancías?"
+    ],
+    "merchant-03": [
+        "My prices are fair, and my goods are genuine. I guarantee it!",
+        "Mis precios son justos y mis productos son genuinos. ¡Lo garantizo!"
+    ],
+    "merchant-04": [
+        "I recently acquired some exotic spices from the eastern islands...",
+        "Recientemente adquirí algunas especias exóticas de las islas orientales..."
+    ],
+    "merchant-05": [
+        "Be careful with those pirates lurking around the coast these days.",
+        "Ten cuidado con esos piratas que merodean por la costa estos días."
+    ],
+    
+    "harbor-01": [
+        "Greetings, I'm the harbor master of this port.",
+        "Saludos, soy el maestro del puerto."
+    ],
+    "harbor-02": [
+        "Make sure your ship's papers are in order before docking.",
+        "Asegúrate de que los papeles de tu barco estén en orden antes de atracar."
+    ],
+    "harbor-03": [
+        "The weather's looking favorable for sailing today.",
+        "El clima se ve favorable para navegar hoy."
+    ],
+    "harbor-04": [
+        "We've had reports of suspicious activity near the reef.",
+        "Hemos tenido informes de actividad sospechosa cerca del arrecife."
+    ],
+    "harbor-05": [
+        "Remember to pay your docking fees before departing!",
+        "¡Recuerda pagar tus tarifas de atraque antes de partir!"
+    ],
+
+    "tavern-01": [
+        "Welcome to the Salty Seadog Tavern!",
+        "¡Bienvenido a la Taberna del Perro Marino!"
+    ],
+    "tavern-02": [
+        "You wouldn't believe the stories I hear in this place...",
+        "No creerías las historias que escucho en este lugar..."
+    ],
+    "tavern-03": [
+        "Word is, there's a treasure map making the rounds.",
+        "Se dice que hay un mapa del tesoro circulando."
+    ],
+    "tavern-04": [
+        "Need a room for the night? Just 5 gold pieces.",
+        "¿Necesitas una habitación para la noche? Solo 5 piezas de oro."
+    ],
+    "tavern-05": [
+        "Watch yourself - some unsavory characters about lately.",
+        "Cuídate - hay algunos personajes desagradables últimamente."
+    ],
+
+    "wanderer-01": [
+        "Psst... interested in some special merchandise?",
+        "Psst... ¿interesado en alguna mercancía especial?"
+    ],
+    "wanderer-02": [
+        "These items aren't easy to come by, if you know what I mean.",
+        "Estos artículos no son fáciles de conseguir, si sabes a lo que me refiero."
+    ],
+    "wanderer-03": [
+        "I can offer you a special price, just don't ask where they came from.",
+        "Puedo ofrecerte un precio especial, solo no preguntes de dónde vienen."
+    ],
+    "wanderer-04": [
+        "Everything's authentic, I assure you... mostly.",
+        "Todo es auténtico, te lo aseguro... en su mayoría."
+    ],
+    "wanderer-05": [
+        "Come back later, I might have new stock by then.",
+        "Vuelve más tarde, podría tener nuevo stock para entonces."
+    ],
+
+    "fisher-01": [
+        "The fishing's been good lately, praise the tides!",
+        "¡La pesca ha estado bien últimamente, alabados sean los mares!"
+    ],
+    "fisher-02": [
+        "Saw something strange in the waters this morning...",
+        "Vi algo extraño en las aguas esta mañana..."
+    ],
+    "fisher-03": [
+        "Been fishing these waters for thirty years, I have.",
+        "He estado pescando en estas aguas durante treinta años."
+    ],
+    "fisher-04": [
+        "Watch out for the reef during low tide.",
+        "Ten cuidado con el arrecife durante la marea baja."
+    ],
+    "fisher-05": [
+        "Care to buy some fresh catch?",
+        "¿Te interesa comprar pescado fresco?"
+    ],
+
+    "carpenter-01": [
+        "Need repairs? You've come to the right place!",
+        "¿Necesitas reparaciones? ¡Has venido al lugar correcto!"
+    ],
+    "carpenter-02": [
+        "That's quite a bit of damage to your hull there...",
+        "Eso es bastante daño en tu casco..."
+    ],
+    "carpenter-03": [
+        "I can fix anything that floats, for the right price.",
+        "Puedo arreglar cualquier cosa que flote, por el precio correcto."
+    ],
+    "carpenter-04": [
+        "Quality workmanship takes time, but it's worth the wait.",
+        "El trabajo de calidad lleva tiempo, pero vale la espera."
+    ],
+    "carpenter-05": [
+        "Make sure to waterproof those planks properly.",
+        "Asegúrate de impermeabilizar bien esas tablas."
+    ],
+
+    "stranger-01": [
+        "You seem like someone who can keep a secret...",
+        "Pareces alguien que puede guardar un secreto..."
+    ],
+    "stranger-02": [
+        "I might have information that would interest you.",
+        "Podría tener información que te interese."
+    ],
+    "stranger-03": [
+        "Have you heard about the ghost ship sightings?",
+        "¿Has oído hablar sobre los avistamientos del barco fantasma?"
+    ],
+    "stranger-04": [
+        "Not everything is as it seems in this port.",
+        "No todo es lo que parece en este puerto."
+    ],
+    "stranger-05": [
+        "We shouldn't talk here... too many eyes and ears.",
+        "No deberíamos hablar aquí... hay demasiados ojos y oídos."
+    ],
+
+    "guard-01": [
+        "Keep moving, and stay out of trouble.",
+        "Sigue moviéndote y mantente alejado de los problemas."
+    ],
+    "guard-02": [
+        "We're keeping a close eye on suspicious characters.",
+        "Estamos vigilando de cerca a los personajes sospechosos."
+    ],
+    "guard-03": [
+        "Report any pirate activity immediately.",
+        "Reporta cualquier actividad pirata inmediatamente."
+    ],
+    "guard-04": [
+        "The governor has increased patrols lately.",
+        "El gobernador ha aumentado las patrullas últimamente."
+    ],
+    "guard-05": [
+        "Mind the curfew after sundown.",
+        "Respeta el toque de queda después del atardecer."
+    ]
+}

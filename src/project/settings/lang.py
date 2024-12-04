@@ -4,9 +4,6 @@ from typing import Dict, List
 
 from pydantic import BaseModel, Field
 
-from utils import AssetManager
-
-
 
 class Language(IntEnum):
     """Enumeration of available languages for the game."""
@@ -28,16 +25,16 @@ class LanguageManager(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    @classmethod
-    def load_translations(cls, file_path: str = AssetManager.get_script("ui.json")):
+    def load_translations(cls, file_path: str) -> None:
         try:
             with open(file_path, 'r', encoding='utf-8') as file: 
                 cls._translations = json.load(file)
+
+            # Debug translations
+            print(f"Loaded translations for {len(cls._translations)} keys:")
             # [print(f"\t{key}: {values}") for key, values in cls._translations.items()]
         except FileNotFoundError: print(f"Translations file not found: {file_path}")
         except json.JSONDecodeError as e: print(f"Error parsing translations file: {e}")
-
-    def set_language(self, language: Language): self.language = language
 
     def get_text(self, key: str) -> str:
         try: return self._translations[key][self.language.value]
