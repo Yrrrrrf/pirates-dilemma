@@ -4,19 +4,23 @@ from typing import Dict, List
 
 from pydantic import BaseModel, Field
 
-
 class Language(IntEnum):
     """Enumeration of available languages for the game."""
-    ENGLISH = 0
-    SPANISH = 1
-    # todo: Add the equivalent dialogues for the following languages
-    # FRENCH = 2
-    # GERMAN = 3
-    # ITALIAN = 4
-    # PORTUGUESE = 5
-    # RUSSIAN = 6
-    # JAPANESE = 7
-    # Add more languages as needed
+    ENGLISH = 0     # * Seize the day
+    SPANISH = 1     # * Aprovecha el día
+    FRENCH = 2      # * Cueille le jour
+    GERMAN = 3      # * Nutze den Tag
+    ITALIAN = 4     # * Cogli l'attimo
+    PORTUGUESE = 5  # * Aproveite o dia
+
+    # RUSSIAN = 6     # * Лови момент        -> read_as("Lovi moment")
+    # JAPANESE = 7    # * 今を生きろ          -> read_as("Ima o ikiro")
+    # CHINESE = 8     # * 把握今天            -> read_as("Bǎwò jīntiān")
+    # KOREAN = 9      # * 오늘을 즐겨라       -> read_as("Oneul-eul jeulgyeola")
+    # ARABIC = 10     # * استغل اليوم        -> read_as("Istghl alyawm")
+    # HINDI = 11      # * आज का दिन जीतो     -> read_as("Aaj ka din jeeto")
+    # LATIN = 12      # *^Carpe diem
+    # POLISH = 13     # *^Wykorzystaj dzień
 
 class LanguageManager(BaseModel):
     language: Language = Field(...)

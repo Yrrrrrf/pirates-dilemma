@@ -29,6 +29,36 @@
         "शुरू करें"
     ],
 
+    "continue": [
+        "Continue",
+        "Continuar",
+        "Continuer",
+        "Fortsetzen",
+        "Continua",
+        "Continuar",
+        "Продолжить",
+        "続行",
+        "继续游戏",
+        "계속하기",
+        "استمر",
+        "जारी रखें"
+    ],
+
+    "pause": [
+        "Pause Game",
+        "Pausar",
+        "Pause",
+        "Pause",
+        "Pausa",
+        "Pausa",
+        "Пауза",
+        "一時停止",
+        "暂停游戏",
+        "일시 중지",
+        "إيقاف مؤقت",
+        "विराम"
+    ],
+
     "settings": [
         "Settings",
         "Configuración",

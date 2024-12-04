@@ -36,8 +36,9 @@ class MenuManager:
         # Initialize main card
         main_card = Card(self.surface, self.theme, "menu_title")
         main_card.set_background(self.background)
-        main_card.add_item("start", (0, 0), self.run)
+        main_card.add_item("start", (0, 0), lambda: self.run())
         main_card.add_item("options", (0, 0), lambda: self.show_card('options'))
+        # main_card.add_item("options", (0, 0), lambda: print("Options not implemented yet!"))
         main_card.add_item("exit", (0, 0), sys.exit)
         cards['main'] = main_card
 
