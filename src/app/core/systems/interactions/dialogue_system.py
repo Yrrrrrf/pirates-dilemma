@@ -4,7 +4,7 @@ import pygame
 from pydantic import BaseModel, Field
 from pygame import Surface, font
 
-from app.core.entities.npc import NPC
+from app.core.systems.entities.npc import NPC
 from project import npc_lang_manager
 from tools import AssetManager
 

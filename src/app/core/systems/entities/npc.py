@@ -3,8 +3,8 @@ from enum import Enum
 from typing import List
 from pydantic import Field
 
-from app.core.entities import *
-from app.core.entities.sprites import AnimatedSprite, AnimationState
+from app.core.systems.entities import *
+from app.core.systems.entities.sprites import *
 from tools import AssetManager
 
 class NPCType(Enum):

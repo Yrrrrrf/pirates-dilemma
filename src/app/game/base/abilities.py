@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from app.core.entities.sprites import AnimationState
 
 class Ability(BaseModel):
     """Represents a player ability with cooldown management"""

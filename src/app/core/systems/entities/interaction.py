@@ -1,5 +1,5 @@
-from app.core.entities.npc import NPC, NPCType
-from app.game.player import Player
+from app.core.systems.entities.npc import NPC, NPCType
+from app.game.base.player import Player
 from tools import AssetManager
 
 from enum import Enum

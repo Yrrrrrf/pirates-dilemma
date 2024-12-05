@@ -48,8 +48,7 @@ class App(BaseModel):
             self.engine = None
         
         self.engine = Engine()
-        self.engine.initialize(self.display_surface)
-        print(f"\033[92mEngine Initialized\033[0m")
+        self.engine.init(self.display_surface)
 
     def new_game(self):
         """Start a new game, ensuring clean state"""
@@ -112,7 +111,7 @@ class App(BaseModel):
         match event.type:
             case pygame.QUIT: self.running = False
             case pygame.KEYDOWN: self.handle_keydown(event)
-            # case pygame.MOUSEBUTTONDOWN: self.handle_click(event)
+            case pygame.MOUSEBUTTONDOWN: self.handle_click(event)
             # case pygame.MOUSEMOTION: self.handle_hover(event)
             # case pygame.VIDEORESIZE: self.handle_resize(event)
 

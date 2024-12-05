@@ -3,6 +3,8 @@ from typing import Optional, Dict, Any
 import pygame
 from pydantic import BaseModel, Field
 
+from app.core.engine.world import WorldManager
+
 class EngineState(BaseModel):
     """Holds the current state of the game engine"""
     debug: bool = Field(default=False)
@@ -16,13 +18,18 @@ class Engine(BaseModel):
     clock: pygame.time.Clock = Field(default_factory=pygame.time.Clock)
     # * Store modules/systems that can be added to the engine
     systems: Dict[str, Any] = Field(default_factory=dict)  # * Add systems dictionary
+    world_manager: Optional[WorldManager] = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
 
-    def initialize(self, surface: pygame.Surface) -> None:
+    def init(self, surface: pygame.Surface) -> None:
         """Initialize the engine with a display surface"""
         self.display_surface = surface
+
+        self.world_manager = WorldManager()
+        self.world_manager.create_world("main", 'big-map.tmx')
+        # self.world_manager.create_world("main", 'main-map.tmx')
         # Initialize any required systems here
         def init_systems():
             pass
@@ -42,8 +49,6 @@ class Engine(BaseModel):
     def render(self) -> None:
         """Render the current frame"""
         if not self.display_surface: return
-
-        self.display_surface.fill((0, 0, 0))
 
         # * Render all systems
         [system.render(self.display_surface) for system in self.systems.values() if hasattr(system, 'render')]
@@ -72,6 +77,13 @@ class Engine(BaseModel):
         dt = self.clock.tick(self.state.fps) / 1000.0
         self.update(dt)
         self.render()
+
+        self.display_surface.fill((0, 0, 0))  # Clear the screen
+        self.world_manager.update(dt)  # Update the world
+        self.world_manager.draw(self.display_surface)
+
+        pygame.display.flip()
+
 
     def cleanup(self) -> None:
         """Clean up engine resources"""

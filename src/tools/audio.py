@@ -128,10 +128,10 @@ class AudioManager:
 
     def toggle_music(self) -> None:
         """Toggle music pause state"""
-        if self.music_paused:
-            pygame.mixer.music.unpause()
-        else:
-            pygame.mixer.music.pause()
+        match self.music_paused:
+            case True: pygame.mixer.music.unpause()
+            case False: pygame.mixer.music.pause()
+        # self.music_paused ^= True  # Toggle pause state
         self.music_paused = not self.music_paused
 
     def stop_music(self) -> None:

@@ -3,12 +3,12 @@ from typing import Dict, Optional
 import pygame
 from pydantic import Field
 
-from app.engine.camera import Camera
-from app.core.entities import Actor
-from app.core.entities.sprites import AnimatedSprite, AnimationState, Direction
-from app.game.reputation import Reputation
-from app.game.inventory import Inventory
-from app.game.abilities import Ability
+from app.core.engine.camera import Camera
+from app.core.systems.entities import Actor
+from app.core.systems.entities.sprites import AnimatedSprite, AnimationState, Direction
+from app.game.base.abilities import Ability
+from app.game.base.inventory import Inventory
+from app.game.base.reputation import Reputation
 from tools import AssetManager
 
 class Player(Actor):

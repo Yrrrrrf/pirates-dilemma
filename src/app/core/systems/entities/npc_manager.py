@@ -4,11 +4,11 @@ from pydantic import BaseModel, Field
 from pygame import Surface, font
 from pygame.math import Vector2
 
-from app.core.entities.interaction import InteractionMenu
-from app.core.entities.npc import NPC, NPCType
-from app.engine.camera import Camera
-from app.game.player import Player
+from app.core.engine.camera import Camera
+from app.core.systems.entities.interaction import InteractionMenu
+from app.core.systems.entities.npc import NPC, NPCType
 from app.core.systems.interactions.dialogue_system import DialogueSystem
+from app.game.base.player import Player
 from tools import AssetManager
 
 

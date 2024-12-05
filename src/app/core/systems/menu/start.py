@@ -161,6 +161,20 @@ class StartMenuContainer(MenuContainer[StartMenuItem]):
         ]
         pygame.draw.polygon(surface, color, points)
 
+    def handle_mousemotion(self, pos: Tuple[int, int]) -> None:
+        """Handle mouse motion for all items"""
+        for item in self.items:
+            if isinstance(item, VolumeControl):
+                item.handle_drag(pos)
+            else:
+                item.handle_hover(pos)
+
+    def handle_mouseup(self, pos: Tuple[int, int]) -> None:
+        """Handle mouse button release for all items"""
+        for item in self.items:
+            if isinstance(item, VolumeControl):
+                item.handle_release()
+
 class StartMenuManager:
     """Manages the main menu system using the new component architecture"""
     def __init__(self, surface: Surface, run_fn: Callable[[], None]) -> None:
@@ -198,7 +212,13 @@ class StartMenuManager:
         # Start menu
         main_container = StartMenuContainer(self.theme, self.surface, "menu_title")
         main_container.set_background(self.background)
-        main_container.add_item(StartMenuItem("start", self.theme, self.run, main_container.renderer))
+
+        # ^ Use this 'some_fn' trick to handle many things in a single function... (and avoid lambda hell)
+        def some_fn():
+            audio_manager.cleanup()
+            self.run()
+
+        main_container.add_item(StartMenuItem("start", self.theme, some_fn, main_container.renderer))
         main_container.add_item(StartMenuItem("options", self.theme, lambda: self.show_container('options'), main_container.renderer))
         main_container.add_item(StartMenuItem("exit", self.theme, sys.exit, main_container.renderer))
         self.containers['main'] = main_container
@@ -285,8 +305,7 @@ class StartMenuManager:
             
             # Render current container
             self.containers[self.current_container].render(surface)
-        else:
-            print("Warning: No container to display")
+        else: print("Warning: No container to display")
 
     def resize(self, size: Tuple[int, int]) -> None:
         """Handle window resizing"""
@@ -295,19 +314,16 @@ class StartMenuManager:
         for container in self.containers.values():
             container.set_background(self.background)
 
+    # todo: Look for a better way to handle these events...
+    # todo: Look for a better way to handle these events...
+    # todo: Look for a better way to handle these events...
+
     def handle_mousemotion(self, pos: Tuple[int, int]) -> None:
         """Handle mouse motion events"""
         if self.current_container:
-            # Update hover states
-            self.containers[self.current_container].handle_hover(pos)
-            # Handle volume control dragging
-            for item in self.containers[self.current_container].items:
-                if isinstance(item, VolumeControl):
-                    item.handle_drag(pos)
+            self.containers[self.current_container].handle_mousemotion(pos)
 
     def handle_mouseup(self, pos: Tuple[int, int]) -> None:
         """Handle mouse button release"""
         if self.current_container:
-            for item in self.containers[self.current_container].items:
-                if isinstance(item, VolumeControl):
-                    item.handle_release()
+            self.containers[self.current_container].handle_mouseup(pos)
