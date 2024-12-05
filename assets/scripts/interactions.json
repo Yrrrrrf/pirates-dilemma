@@ -6,6 +6,69 @@
         "Drücken Sie E, um zu interagieren",
         "Premi E per interagire",
         "Presione E para interactuar"
+    ],
+
+    "talk": [
+        "Talk",
+        "Hablar",
+        "Parler",
+        "Sprechen",
+        "Parla",
+        "Hablar"
+    ],
+
+    "trade": [
+        "Trade",
+        "Comerciar",
+        "Échanger",
+        "Handel",
+        "Scambia",
+        "Comerciar"
+    ],
+
+    "steal": [
+        "Steal",
+        "Robar",
+        "Voler",
+        "Stehlen",
+        "Rubare",
+        "Robar"
+    ],
+
+    "pick up": [
+        "Pick up",
+        "Recoger",
+        "Ramasser",
+        "Abholen",
+        "Raccogliere",
+        "Recoger"
+    ],
+
+    "open": [
+        "Open",
+        "Abrir",
+        "Ouvrir",
+        "Öffnen",
+        "Apri",
+        "Abrir"
+    ],
+
+    "close": [
+        "Close",
+        "Cerrar",
+        "Fermer",
+        "Schließen",
+        "Chiudi",
+        "Cerrar"
+    ],
+
+    "use": [
+        "Use",
+        "Usar",
+        "Utiliser",
+        "Benutzen",
+        "Usa",
+        "Usar"
     ]
 
 }

@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from pygame import Vector2
 from app.core.engine.camera import Camera
 from app.core.systems.entities.npc import NPC, NPCType
-from app.core.systems.interactions.dialogue import DialogueSystem
+from app.core.systems.fn.dialogue import DialogueSystem, EnhancedDialogueSystem
 from app.core.systems.ui.hint import *
 from project import int_lang_manager
 from app.game.base.player import Player
@@ -14,7 +14,7 @@ class NPCManager(BaseModel):
     npcs: List[NPC] = Field(default_factory=list)
     interaction_range: float = Field(default=100.0)
     hint_manager: HintManager = Field(default_factory=HintManager)
-    dialogue_system: DialogueSystem = Field(default_factory=DialogueSystem)
+    dialogue_system: EnhancedDialogueSystem = Field(default_factory=EnhancedDialogueSystem )
     closest_npc: Optional[NPC] = None
 
     class Config:

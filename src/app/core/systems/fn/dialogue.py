@@ -4,7 +4,8 @@ import pygame
 from pydantic import BaseModel, Field
 from pygame import Surface, Vector2, font
 
-from app.core.systems.entities.npc import NPC
+from app.core.systems.entities.npc import NPC, NPCType
+from app.core.systems.fn.interaction import DialogueMenu, DialogueMenuOption, InteractionType
 from project import npc_lang_manager
 from tools import AssetManager
 
@@ -253,3 +254,109 @@ class DialogueSystem(BaseModel):
 
         current_message = self.messages[self.current_message_index]
         self.dialogue_box.draw(surface, current_message)
+
+
+
+class EnhancedDialogueSystem(DialogueSystem):
+    """Extended dialogue system with interaction menu support"""
+    menu: DialogueMenu = Field(default_factory=DialogueMenu)
+    menu_active: bool = Field(default=False)
+    current_npc: Optional[NPC] = None
+
+    def _get_npc_interactions(self, npc_type: NPCType) -> List[InteractionType]:
+        """Get available interactions for NPC type"""
+        type_interactions = {
+            NPCType.MERCHANT: [InteractionType.BUY, InteractionType.SELL, InteractionType.STEAL],
+            NPCType.HARBOR_MASTER: [InteractionType.BUY, InteractionType.STEAL],
+            NPCType.TAVERN_KEEPER: [InteractionType.BUY, InteractionType.SELL],
+            NPCType.WANDERING_MERCHANT: [InteractionType.BUY, InteractionType.SELL, InteractionType.STEAL],
+            NPCType.CIVILIAN: [InteractionType.STEAL],
+        }
+        return type_interactions.get(npc_type, [])
+
+    def start_dialogue(self, npc: NPC) -> None:
+        """Start dialogue with an NPC"""
+        super().start_dialogue(npc)
+        self.current_npc = npc
+        self.menu_active = False
+
+    def advance_dialogue(self) -> None:
+        """Advance dialogue or show menu when complete"""
+        if self.menu_active:
+            return
+
+        self.current_message_index += 1
+        if self.current_message_index >= len(self.messages):
+            self.show_interaction_menu()
+
+    def show_interaction_menu(self) -> None:
+        """Show interaction menu after dialogue"""
+        if not self.current_npc:
+            return
+
+        self.menu_active = True
+        self.menu.options.clear()
+
+        # Create menu options with proper callbacks
+        for interaction in self._get_npc_interactions(self.current_npc.npc_type):
+            # Create a callback that captures both self and interaction
+            def create_callback(interaction_type):
+                return lambda: self._handle_interaction(interaction_type)
+                
+            self.menu.options.append(DialogueMenuOption(
+                text=interaction.value,
+                interaction_type=interaction,
+                callback=create_callback(interaction)
+            ))
+
+    def _handle_interaction(self, interaction: InteractionType) -> None:
+        """Handle interaction selection"""
+        if not self.current_npc:
+            return
+
+        # Handle the interaction
+        match interaction:
+            case InteractionType.BUY:
+                print(f"Opening shop with {self.current_npc.name}")
+            case InteractionType.SELL:
+                print(f"Selling items to {self.current_npc.name}")
+            case InteractionType.STEAL:
+                success = random.random() < 0.5
+                if success:
+                    print(f"Successfully stole from {self.current_npc.name}")
+                else:
+                    print(f"Failed to steal from {self.current_npc.name}")
+        
+        # Close the dialogue and menu
+        self.active = False
+        self.menu_active = False
+
+    def update(self, dt: float, player_pos: Vector2, npc_pos: Vector2) -> None:
+        """Update dialogue and menu state"""
+        super().update(dt, player_pos, npc_pos)
+        
+        if self.menu_active:
+            self.menu.update_hover(pygame.mouse.get_pos())
+
+    def handle_input(self, event: pygame.event.Event) -> None:
+        """Handle input for dialogue and menu"""
+        pass
+
+    def draw(self, surface: Surface) -> None:
+        """Draw dialogue box and integrated menu"""
+        if not self.active:
+            return
+
+        # Draw the dialogue box background
+        super().draw(surface)
+        
+        # Draw menu if active
+        if self.menu_active:
+            screen_width, screen_height = surface.get_size()
+            box_rect = pygame.Rect(
+                (screen_width - self.dialogue_box.width) // 2,
+                screen_height - self.dialogue_box.height - 20,
+                self.dialogue_box.width,
+                self.dialogue_box.height
+            )
+            self.menu.draw(surface, box_rect, int(self.dialogue_box._alpha))

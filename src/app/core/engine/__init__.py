@@ -66,11 +66,16 @@ class Engine(BaseModel):
                 self.state.debug ^= True  # Toggle debug mode (XOR)
 
     def handle_keydown(self, event: pygame.event.Event):
-        # Handle interaction menu clicks
+        if self.world_manager.npc_manager:
+            npc_manager = self.world_manager.npc_manager
+            if npc_manager.dialogue_system.active:
+                npc_manager.dialogue_system.handle_input(event)
+
         match event.key:
             case pygame.K_i: self.world_manager.player.inventory.toggle_visibility()
             case pygame.K_e: 
                 if self.world_manager.npc_manager:
+                    # self.world_manager.npc_manager.dialogue_system.handle_input(event)
                     self.world_manager.npc_manager.handle_interaction(self.world_manager.player)
             case pygame.K_SPACE:
                 if self.world_manager.npc_manager and self.world_manager.npc_manager.dialogue_system.active:
@@ -80,11 +85,11 @@ class Engine(BaseModel):
                     else:
                         dialogue_box.complete_text()
 
-    def handle_click(self, event: pygame.event.Event) -> None:
-        """Handle mouse click events"""
-        pass
-        # match event.type:
-        #     case pygame.MOUSEBUTTONDOWN:
+    def handle_click(self, event: pygame.event.Event):
+        if self.world_manager.npc_manager:
+            npc_manager = self.world_manager.npc_manager
+            if npc_manager.dialogue_system.active and npc_manager.dialogue_system.menu_active:
+                npc_manager.dialogue_system.handle_input(event)
 
     def run(self) -> None:
         """Main game loop"""
