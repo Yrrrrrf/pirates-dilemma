@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import pygame
 # local
 from layout.ui import *
-from utils import AssetManager
+from tools import AssetManager
 
 
 class DebugUI(BaseModel):

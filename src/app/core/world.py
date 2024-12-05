@@ -8,11 +8,12 @@ import pyscroll
 from pydantic import BaseModel, Field
 # local
 from app.core.camera import Camera
+from app.core.entities.interaction import InteractionMenu
 from app.core.entities.npc import NPC
 from app.core.entities.npc_manager import NPCManager
 from app.game.player import Player
 from layout.ui.debug import create_debug_ui, DebugUI
-from utils import AssetManager
+from tools import AssetManager
 
 # ========================== TiledMap Class ==========================
 class TiledMap(BaseModel):
@@ -75,6 +76,7 @@ class WorldManager(BaseModel):
     player: Player = Field(default_factory=Player)
     debug_ui: Optional[DebugUI] = Field(default=None)
     npc_manager: Optional[NPCManager] = Field(default=None)
+    interaction_menu: InteractionMenu = Field(default_factory=InteractionMenu)
 
     class Config:
         arbitrary_types_allowed = True
@@ -120,6 +122,9 @@ class WorldManager(BaseModel):
         # * Update debug UI
         self._update_debug_info()
 
+        # ^ Update interaction menu
+        if self.interaction_menu.visible: self.interaction_menu.update(pygame.mouse.get_pos())
+
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -145,6 +150,8 @@ class WorldManager(BaseModel):
         # * Draw debug UI if initialized
         if self.debug_ui: self.debug_ui.draw(surface)
 
+        # ^ Draw interaction menu
+        if self.interaction_menu.visible: self.interaction_menu.draw(surface)
 
     # ? Debug UI methods ----------------------------------------------------------------------
 

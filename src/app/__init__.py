@@ -3,7 +3,7 @@ import pygame
 from app.core.menu.pause import PauseMenu
 from project import AppData
 from project.settings.constants import GameInfo
-from utils import AssetManager
+from tools import AssetManager
 from app.core.engine import Engine
 from enum import Enum
 from app.core.menu_manager import MenuManager  # Import your menu manager
@@ -37,7 +37,7 @@ class App(BaseModel):
         self.display_surface = self.set_display_mode()
 
         # Then initialize menu and engine
-        self.menu = MenuManager(self.display_surface, self.init_new_game)  # Pass the method directly
+        self.menu = MenuManager(self.display_surface, self.new_game)  # Pass the method directly
         self._init_pause_menu()
 
         print(f"\033[94mApp Running\033[0m")
@@ -60,7 +60,7 @@ class App(BaseModel):
         self.engine.initialize_display(self.display_surface)
         print(f"\033[92mEngine Initialized\033[0m")
 
-    def init_new_game(self):
+    def new_game(self):
         """Start a new game, ensuring clean state"""
         print("Initializing new game...")
         self.init_engine()  # Reinitialize engine
@@ -85,13 +85,11 @@ class App(BaseModel):
         self.app_data.settings.fullscreen ^= True
         self.display_surface = self.set_display_mode()
         
-        # Reinitialize components with new display surface
-        if self.engine:
-            self.engine.initialize_display(self.display_surface)
-        if self.menu:
-            self.menu = MenuManager(self.display_surface, self.init_new_game)
-        if self.pause_menu:
-            self._init_pause_menu()
+        # todo: Def some more generic 'init_components' fn
+        # # Reinitialize components with new display surface
+        # if self.engine: self.engine.initialize_display(self.display_surface)
+        # if self.menu: self.menu = MenuManager(self.display_surface, self.new_game)
+        # if self.pause_menu: self._init_pause_menu()
 
     def _toggle_pause(self):
         match self.game_state:
@@ -108,25 +106,21 @@ class App(BaseModel):
             match event.type:
                 case pygame.QUIT:
                     self.running = False
-                
                 case pygame.KEYDOWN:
                     # Global keydown events
                     match event.key:
                         case pygame.K_ESCAPE: self._toggle_pause()
                         case pygame.K_F11: self._toggle_fullscreen()
-
                     # State-specific keydown events
                     match self.game_state:
                         case GameState.MENU: self.menu.handle_keydown(event)
                         case GameState.PLAYING: self.engine.handle_keydown(event)
-                        case GameState.PAUSED: self.pause_menu.handle_keydown(event)
-                
+                        case GameState.PAUSED: self.pause_menu.handle_keydown(event)                
                 case pygame.MOUSEBUTTONDOWN:
                     match self.game_state:
                         case GameState.MENU: self.menu.handle_click(event.pos)
                         case GameState.PLAYING: self.engine.handle_click(event)
-                        case GameState.PAUSED: self.pause_menu.handle_click(event.pos)
-                
+                        case GameState.PAUSED: self.pause_menu.handle_click(event.pos)                
                 case pygame.MOUSEMOTION:
                     match self.game_state:
                         case GameState.PAUSED: self.pause_menu.update_hover_states(event.pos)
@@ -158,3 +152,4 @@ class App(BaseModel):
             pygame.display.flip()
 
         pygame.quit()
+    

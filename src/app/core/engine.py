@@ -33,6 +33,10 @@ class Engine(BaseModel):
         return True
 
     def handle_keydown(self, event: pygame.event.Event):
+        # Handle interaction menu clicks
+        if self.world_manager.npc_manager and self.world_manager.npc_manager.interaction_menu.visible:
+            self.world_manager.npc_manager.interaction_menu.handle_click(event)
+
         match event.key:
             case pygame.K_i: self.world_manager.player.inventory.toggle_visibility()
             case pygame.K_e: self.world_manager.npc_manager.handle_interaction(self.world_manager.player)
@@ -44,6 +48,7 @@ class Engine(BaseModel):
 
     def handle_click(self, event: pygame.event.Event):
         match event.button:
-            case 1: self.world_manager.player.inventory.handle_click(event.pos)
+            case 1: 
+                self.world_manager.player.inventory.handle_click(event.pos)
             case 2: print("Impl: Middle mouse button click")
             case 3: print("Impl: Right mouse button click")

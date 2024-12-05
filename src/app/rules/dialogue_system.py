@@ -6,7 +6,7 @@ from pygame import Surface, font
 
 from app.core.entities.npc import NPC
 from project import npc_lang_manager
-from utils import AssetManager
+from tools import AssetManager
 
 class DialogueMessage(BaseModel):
     text: str

@@ -4,11 +4,12 @@ from pydantic import BaseModel, Field
 from pygame import Surface, font
 from pygame.math import Vector2
 
+from app.core.entities.interaction import InteractionMenu
 from app.core.entities.npc import NPC, NPCType
 from app.core.camera import Camera
 from app.game.player import Player
 from app.rules.dialogue_system import DialogueSystem
-from utils import AssetManager
+from tools import AssetManager
 
 
 class InteractionHint(BaseModel):
@@ -75,51 +76,24 @@ class InteractionHint(BaseModel):
 
 class NPCManager(BaseModel):
     npcs: List[NPC] = Field(default_factory=list)
-    interaction_range: float = Field(default=100.0)  # Range for interaction in pixels
+    interaction_range: float = Field(default=100.0)
     hint: InteractionHint = Field(default_factory=InteractionHint)
     closest_npc: Optional[NPC] = None
     dialogue_system: DialogueSystem = Field(default_factory=DialogueSystem)
+    interaction_menu: InteractionMenu = Field(default_factory=InteractionMenu)
 
     class Config:
         arbitrary_types_allowed = True
 
     def __init__(self, **data):
         super().__init__(**data)
-        # Add some test NPCs
         self._add_test_npcs()
 
-    def _add_test_npcs(self) -> None:
-        """Add test NPCs with their dialogue keys"""
-        test_npcs = [
-            # Merchant at the market
-            NPC(
-                position=Vector2(400, 300),
-                npc_type=NPCType.MERCHANT,
-                dialogue_keys=[f"merchant-{i:02d}" for i in range(1, 6)]
-            ),
-            # Harbor Master
-            NPC(
-                position=Vector2(150, 240),
-                npc_type=NPCType.HARBOR_MASTER,
-                dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]
-            ),
-            # Tavern Keeper
-            NPC(
-                position=Vector2(600, 400),
-                npc_type=NPCType.TAVERN_KEEPER,
-                dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]
-            ),
-            # Wandering Merchant
-            NPC(
-                position=Vector2(200, 500),
-                npc_type=NPCType.WANDERING_MERCHANT,
-                dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)]
-            )
-        ]
-        self.npcs.extend(test_npcs)
-
     def update(self, dt: float, player_pos: Vector2) -> None:
-        for npc in self.npcs: npc.update(dt)
+        """Update all NPCs and interaction systems"""
+        # Update individual NPCs
+        for npc in self.npcs:
+            npc.update(dt)
 
         # Find closest NPC and update interaction hint
         self.closest_npc = self._get_closest_npc(player_pos)
@@ -128,42 +102,78 @@ class NPCManager(BaseModel):
             self._get_distance(player_pos, self.closest_npc.position) <= self.interaction_range
         )
         self.hint.update(dt, show_hint)
+        
+        # Update dialogue system
         self.dialogue_system.update(dt)
 
-    def handle_interaction(self, 
-        player: Player
-    ) -> None:
-        if not self.closest_npc: return  # * No NPC in range (early exit)
-        self.dialogue_system.start_dialogue(self.closest_npc)
-        player.reputation.modify(2)
+        # Update interaction menu if visible
+        if self.interaction_menu.visible:
+            self.interaction_menu.update(dt, pygame.mouse.get_pos())
+
+    def handle_interaction(self, player: Player) -> None:
+        """Handle player interaction with closest NPC"""
+        if not self.closest_npc:
+            return
+
+        if self.dialogue_system.active:
+            dialog = self.dialogue_system.dialogue_box
+            if dialog.is_complete():
+                self.dialogue_system.advance_dialogue()
+                if self.dialogue_system.current_message_index >= len(self.dialogue_system.messages):
+                    self.interaction_menu.show_for_npc(self.closest_npc, player)
+            else:
+                dialog.complete_text()
+        else:
+            print(f"Starting dialogue with {self.closest_npc.npc_type}")
+            self.dialogue_system.start_dialogue(self.closest_npc)
+            player.reputation.modify(2)
 
     def draw(self, surface: Surface, camera: Camera) -> None:
-        # Draw all NPCs
+        """Draw all NPCs and interaction systems"""
+        # Draw NPCs
         for npc in self.npcs:
-            # Convert world position to screen position
-            screen_pos = camera.world_to_screen(npc.position)
+            npc.draw(surface, camera)
             
-            # Draw NPC (temporary representation)
-            pygame.draw.circle(surface, (0, 255, 0), (int(screen_pos.x), int(screen_pos.y)), 20)
-            
-            # If this is the closest NPC and in range, draw the interaction hint
+            # Draw interaction hint for closest NPC
             if npc == self.closest_npc:
+                screen_pos = camera.world_to_screen(npc.position)
                 self.hint.draw(surface, (int(screen_pos.x), int(screen_pos.y)))
 
-        # Draw dialogue box
+        # Draw dialogue system
         if self.dialogue_system.active:
             self.dialogue_system.draw(surface)
 
+        # Draw interaction menu
+        if self.interaction_menu.visible:
+            self.interaction_menu.draw(surface)
 
     def _get_closest_npc(self, player_pos: Vector2) -> Optional[NPC]:
+        """Find the closest NPC within interaction range"""
         if not self.npcs:
             return None
 
-        closest = min(
-            self.npcs,
+        closest = min(self.npcs,
             key=lambda npc: self._get_distance(player_pos, npc.position)
         )
+
         return closest if self._get_distance(player_pos, closest.position) <= self.interaction_range else None
 
-    def _get_distance(self, pos1: Vector2, pos2: Vector2) -> float:
-        return pos1.distance_to(pos2)
+    def _get_distance(self, pos1: Vector2, pos2: Vector2) -> float: return pos1.distance_to(pos2)
+
+    def _add_test_npcs(self) -> None:
+        """Add test NPCs with their dialogue keys"""
+        test_npcs = [
+            NPC(position=Vector2(400, 300),
+                npc_type=NPCType.MERCHANT,
+                dialogue_keys=[f"merchant-{i:02d}" for i in range(1, 6)]),
+            NPC(position=Vector2(150, 240),
+                npc_type=NPCType.HARBOR_MASTER,
+                dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]),
+            NPC(position=Vector2(600, 400),
+                npc_type=NPCType.TAVERN_KEEPER,
+                dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]),
+            NPC(position=Vector2(200, 500),
+                npc_type=NPCType.WANDERING_MERCHANT,
+                dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)])
+        ]
+        self.npcs.extend(test_npcs)

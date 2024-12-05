@@ -9,7 +9,7 @@ from app.core.entities.sprites import AnimatedSprite, AnimationState, Direction
 from app.game.reputation import Reputation
 from app.game.inventory import Inventory
 from app.game.abilities import Ability
-from utils import AssetManager
+from tools import AssetManager
 
 class Player(Actor):
     sprite_sheet_path: str = Field("static\\player.png")

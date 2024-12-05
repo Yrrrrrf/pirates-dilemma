@@ -1,7 +1,7 @@
 from typing import Callable, Dict, Optional, Tuple
 import pygame
 from project.settings.lang import Language, LanguageManager
-from utils import AssetManager
+from tools import AssetManager
 from project import menu_lang_manager
 
 class PauseMenuItem:

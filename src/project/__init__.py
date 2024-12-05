@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from project.theme.theme import Theme, Themes
 from project.settings import *
-from utils import AssetManager
+from tools import AssetManager
 
 
 class AppData(BaseModel):

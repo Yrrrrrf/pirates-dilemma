@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Tuple
 from pydantic import BaseModel
 
-from utils import AssetManager
+from tools import AssetManager
 
 
 class Theme(BaseModel):

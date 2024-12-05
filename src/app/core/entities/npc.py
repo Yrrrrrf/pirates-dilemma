@@ -5,9 +5,7 @@ from pydantic import Field
 
 from app.core.entities import *
 from app.core.entities.sprites import AnimatedSprite, AnimationState
-from project import npc_lang_manager
-
-from utils import AssetManager
+from tools import AssetManager
 
 class NPCType(Enum):
     # SOME COMMON GUY...
@@ -24,16 +22,25 @@ def get_random_asset() -> str:
     return f"static\\npc\\{gender}{random.randint(1, 2 if gender == "Female" else 4)}.png"
 
 
+
 class NPC(Actor):
-    npc_type: NPCType = Field(...)
+    npc_type: NPCType = Field(...)  # Required field
     name: str = Field(default="Some NPC")
-    dialogue_keys: List[str]  # e.g., ["dialogue_1", "dialogue_2", etc.]
+    dialogue_keys: List[str] = Field(default_factory=list)  # Default empty list if not provided
     current_dialogue_index: int = Field(default=0)
 
-    # todo: Fix the asset loader...
     sprite_sheet_path: str = Field(default_factory=get_random_asset)
-    sprite_type_index: int = Field(default=0)  # 0-3 for each type
+    sprite_type_index: int = Field(default=0)
     scale_factor: float = Field(default=3.0)
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.sprite = AnimatedSprite()
+        self._initialize_random_npc()
+        
+        # Set name based on NPC type if not provided
+        if self.name == "Some NPC":
+            self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
 
     def __init__(self, **data):
         super().__init__(**data)
@@ -117,3 +124,4 @@ class NPC(Actor):
         )
         
         surface.blit(scaled_frame, draw_pos)
+
