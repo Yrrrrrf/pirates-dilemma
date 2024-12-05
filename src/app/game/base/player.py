@@ -201,7 +201,7 @@ class Player(Actor):
         # Handle actions
         if keys[pygame.K_SPACE]:
             self.sprite.set_state(PlayerState.ATTACK)
-        elif keys[pygame.K_e]:
+        elif keys[pygame.K_f]:
             self.sprite.set_state(PlayerState.PICKUP)
 
         # Move character

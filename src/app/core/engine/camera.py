@@ -15,7 +15,7 @@ class Camera(BaseModel):
         # movement = pygame.math.Vector2(dx, dy) * self.move_speed
         movement = pygame.math.Vector2(dx, dy) * self.move_speed * dt
         new_position = self.position + movement
-        
+
         screen_size = pygame.math.Vector2(pygame.display.get_surface().get_size())
         max_x = self.map_size[0] - screen_size.x / self.zoom
         max_y = self.map_size[1] - screen_size.y / self.zoom

@@ -65,6 +65,21 @@ class Engine(BaseModel):
                 print("Toggling debug mode")
                 self.state.debug ^= True  # Toggle debug mode (XOR)
 
+    def handle_keydown(self, event: pygame.event.Event):
+        # Handle interaction menu clicks
+        match event.key:
+            case pygame.K_i: self.world_manager.player.inventory.toggle_visibility()
+            case pygame.K_e: 
+                if self.world_manager.npc_manager:
+                    self.world_manager.npc_manager.handle_interaction(self.world_manager.player)
+            case pygame.K_SPACE:
+                if self.world_manager.npc_manager and self.world_manager.npc_manager.dialogue_system.active:
+                    dialogue_box = self.world_manager.npc_manager.dialogue_system.dialogue_box
+                    if dialogue_box.is_complete():
+                        self.world_manager.npc_manager.dialogue_system.advance_dialogue()
+                    else:
+                        dialogue_box.complete_text()
+
     def handle_click(self, event: pygame.event.Event) -> None:
         """Handle mouse click events"""
         pass

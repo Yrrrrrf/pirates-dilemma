@@ -162,15 +162,15 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.center((cam_x + cam_width // 2, cam_y + cam_height // 2))
         self.current_world.tiled_map.group.draw(surface)
 
-        # Draw NPCs and interaction hints
-        if self.npc_manager: self.npc_manager.draw(surface, self.camera)
-
         if self.player:
             self.player.draw(surface, self.camera)
             self.player.reputation.draw(surface, (10, 10))
 
             # Draw inventory
             self.player.inventory.draw(surface)
+
+        # Draw NPCs and interaction hints
+        if self.npc_manager: self.npc_manager.draw(surface, self.camera)
 
     # # ? Debug UI methods ----------------------------------------------------------------------
 

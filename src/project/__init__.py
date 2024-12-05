@@ -19,14 +19,17 @@ app_data: AppData = AppData()
 
 menu_lang_manager = LanguageManager(language=app_data.settings.language)
 npc_lang_manager = LanguageManager(language=app_data.settings.language)
+int_lang_manager = LanguageManager(language=app_data.settings.language)
 
 menu_lang_manager.load_translations(file_path=AssetManager.get_script("menu.json"))
 npc_lang_manager.load_translations(file_path=AssetManager.get_script("npc-dialogues.json"))
+int_lang_manager.load_translations(file_path=AssetManager.get_script("interactions.json"))
 
 def set_app_lang(lang: Language) -> None:
     app_data.settings.language = lang
     menu_lang_manager.set_language(app_data.settings.language)
     npc_lang_manager.set_language(app_data.settings.language)
+    int_lang_manager.set_language(app_data.settings.language)
 
 # todo: Somehow re-strucutre the code to `def app_data.set_lang(lang: Language)`
 # todo: to handle it using the same instance of `app_data` 
