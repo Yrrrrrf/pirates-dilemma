@@ -53,42 +53,28 @@ class NPC(Actor):
         self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
 
 
-
     def _initialize_random_npc(self) -> None:
         """Initialize NPC with random appearance from available types"""
         try:
-            # Select random NPC type and corresponding sprite row
-            self.npc_type = random.choice(list(NPCType))
-            type_index = list(NPCType).index(self.npc_type)
-            
-            # Each NPC type has 3 variants, each taking 3 rows
-            variant = random.randint(0, 2)  # Choose random variant
-            base_row = type_index * 9 + variant * 3  # Calculate starting row
-            
             # Load sprite sheet
             img_path = AssetManager.get_image(self.sprite_sheet_path)
             sprite_sheet = pygame.image.load(img_path).convert_alpha()
             
-            # Frame size is consistent for all characters
-            frame_width = frame_height = 24  # Standard frame size
-            
+            # Set up sprite properties
             self.sprite.sprite_sheet = sprite_sheet
-            self.sprite.frame_size = (frame_width, frame_height)
+            self.sprite.frame_size = (32, 48)  # Updated frame size
             self.sprite.current_state = AnimationState.IDLE
             self.sprite.animation_speed = 0.2
             
-            # Set up animations using the correct rows
-            self.sprite.animations = {
-                AnimationState.IDLE: [(i, base_row) for i in range(4)],
-                AnimationState.MOVE: [(i, base_row + 1) for i in range(4)],
-            }
+            # Set up animations based on direction
+            self.sprite.setup_directional_animations()
             
-            print(f"Initialized {self.npc_type.value} NPC (variant {variant})")
+            print(f"NPC initialized successfully with sprite sheet: {img_path}")
             
         except Exception as e:
             print(f"Error initializing NPC: {e}")
             self._create_fallback_sprite()
-
+    
     def _create_fallback_sprite(self) -> None:
         """Create a basic fallback sprite if loading fails"""
         fallback = pygame.Surface((24, 24), pygame.SRCALPHA)

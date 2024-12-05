@@ -4,6 +4,7 @@ import pygame
 from pydantic import BaseModel, Field
 
 from app.core.engine.world import WorldManager
+from tools.audio import AudioType, audio_manager
 
 class EngineState(BaseModel):
     """Holds the current state of the game engine"""
@@ -32,6 +33,8 @@ class Engine(BaseModel):
         # self.world_manager.create_world("main", 'main-map.tmx')
         # Initialize any required systems here
         def init_systems():
+            # * init audio system
+            audio_manager.play_sound("env\\env-00.mp3", AudioType.UI)
             pass
 
         init_systems()

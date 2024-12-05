@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from app.core.engine.camera import Camera
 from app.core.engine.world.tiled_map import TiledMap
+from app.core.systems.entities.npc_manager import NPCManager
 from app.game.base.player import Player
 from tools import AssetManager
 
@@ -107,7 +108,7 @@ class WorldManager(BaseModel):
     camera: Camera = Field(default_factory=Camera)
     player: Player = Field(default_factory=Player)
     # debug_ui: Optional[DebugUI] = Field(default=None)
-    # npc_manager: Optional[NPCManager] = Field(default=None)
+    npc_manager: Optional[NPCManager] = Field(default=None)
     # interaction_menu: InteractionMenu = Field(default_factory=InteractionMenu)
 
     class Config:
@@ -115,6 +116,9 @@ class WorldManager(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
+
+        # * Initialize debug UI
+        self.npc_manager = NPCManager()
 
     def create_world(self, name: str, map_file: str) -> None:
         new_world = World(map_file=map_file)
@@ -143,6 +147,9 @@ class WorldManager(BaseModel):
         # ^ Update world
         self.current_world.update(dt)
 
+        # Update NPC manager
+        if self.npc_manager:
+            self.npc_manager.update(dt, self.player.position)
 
     def draw(self, surface: pygame.Surface):
         if not self.current_world or not self.current_world.tiled_map:
@@ -156,7 +163,7 @@ class WorldManager(BaseModel):
         self.current_world.tiled_map.group.draw(surface)
 
         # Draw NPCs and interaction hints
-        # if self.npc_manager: self.npc_manager.draw(surface, self.camera)
+        if self.npc_manager: self.npc_manager.draw(surface, self.camera)
 
         if self.player:
             self.player.draw(surface, self.camera)

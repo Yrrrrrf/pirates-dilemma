@@ -70,6 +70,11 @@ class AudioManager:
                 pygame.mixer.music.set_volume(self.config.music_volume * self.config.master_volume)
                 self.current_music = filename
                 self.music_paused = False
+            else:
+                print(f"Music {filename} is already playing... (.____.)")
+                if self.music_paused:
+                    pygame.mixer.music.unpause()
+                    self.music_paused = False
         except Exception as e:
             print(f"Error playing music {filename}: {e}")
 
@@ -106,16 +111,16 @@ class AudioManager:
     def set_type_volume(self, sound_type: AudioType, volume: float) -> None:
         """Set volume for a specific type of sound"""
         volume = max(0.0, min(1.0, volume))
-        
-        if sound_type == AudioType.MUSIC:
-            self.config.music_volume = volume
-            pygame.mixer.music.set_volume(volume * self.config.master_volume)
-        elif sound_type == AudioType.UI:
-            self.config.ui_volume = volume
-        elif sound_type == AudioType.EFFECT:
-            self.config.effects_volume = volume
-        elif sound_type == AudioType.AMBIENT:
-            self.config.ambient_volume = volume
+
+        match sound_type:
+            case AudioType.MUSIC: 
+                self.config.music_volume = volume
+                pygame.mixer.music.set_volume(volume * self.config.master_volume)
+            case AudioType.UI: self.config.ui_volume = volume
+            case AudioType.EFFECT: self.config.effects_volume = volume
+            case AudioType.AMBIENT: self.config.ambient_volume = volume
+    
+
 
         # Update volumes for loaded sounds of this type
         self._update_type_volumes(sound_type)
@@ -144,7 +149,10 @@ class AudioManager:
         """Clean up audio resources"""
         pygame.mixer.music.stop()
         pygame.mixer.quit()
+        pygame.mixer.init()
 
 # In your main.py or app initialization
 audio_manager = AudioManager()
 # audio_manager.play_music("8-bit-arcade.mp3", loop=True)
+audio_manager.set_master_volume(0.2)
+# audio_manager.set_master_volume(1)
