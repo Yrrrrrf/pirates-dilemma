@@ -6,9 +6,9 @@ from pygame.math import Vector2
 
 from app.core.entities.interaction import InteractionMenu
 from app.core.entities.npc import NPC, NPCType
-from app.core.camera import Camera
+from app.engine.camera import Camera
 from app.game.player import Player
-from app.rules.dialogue_system import DialogueSystem
+from app.core.systems.interactions.dialogue_system import DialogueSystem
 from tools import AssetManager
 
 

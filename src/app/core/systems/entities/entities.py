@@ -3,7 +3,7 @@ import pygame
 from pydantic import BaseModel, Field
 from typing import Optional
 
-from app.core.camera import Camera
+from app.engine.camera import Camera
 from .sprites import AnimatedSprite
 
 class Entity(BaseModel):

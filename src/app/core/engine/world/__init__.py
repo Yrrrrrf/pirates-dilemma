@@ -7,33 +7,14 @@ import pytmx
 import pyscroll
 from pydantic import BaseModel, Field
 # local
-from app.core.camera import Camera
-from app.core.entities.interaction import InteractionMenu
-from app.core.entities.npc import NPC
-from app.core.entities.npc_manager import NPCManager
-from app.game.player import Player
-from layout.ui.debug import create_debug_ui, DebugUI
+from app.core.engine.camera import Camera
+from app.core.engine.world.tiled_map import TiledMap
+from app.core.systems.entities.interaction import InteractionMenu
+from app.core.systems.entities.npc import NPC
+from app.core.systems.entities.npc_manager import NPCManager
+from app.game.base.player import Player
+from app.core.systems.menu.debug import DebugUI
 from tools import AssetManager
-
-# ========================== TiledMap Class ==========================
-class TiledMap(BaseModel):
-    tmx_data: pytmx.TiledMap
-    map_data: pyscroll.data.TiledMapData
-    group: pyscroll.PyscrollGroup
-
-    class Config:
-        arbitrary_types_allowed = True
-
-    @classmethod
-    def load_from_file(cls, filename: str):
-        tmx_data = pytmx.load_pygame(filename)
-        map_data = pyscroll.data.TiledMapData(tmx_data)
-        map_layer = pyscroll.BufferedRenderer(map_data, (
-            tmx_data.width * tmx_data.tilewidth,
-            tmx_data.height * tmx_data.tileheight
-        ))
-        group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=0)
-        return cls(tmx_data=tmx_data, map_data=map_data, group=group)
 
 # ========================== World Class ==========================
 class World(BaseModel):

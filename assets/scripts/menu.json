@@ -5,13 +5,7 @@
         "Le Dilemme du Pirate",
         "Das Piratendilemma",
         "Il Dilemma del Pirata",
-        "O Dilema do Pirata",
-        "Дилемма Пирата",
-        "海賊のジレンマ",
-        "海盗的困境",
-        "해적의 딜레마",
-        "معضلة القرصان",
-        "समुद्री डाकू की दुविधा"
+        "O Dilema do Pirata"
     ],
 
     "start": [
@@ -20,13 +14,7 @@
         "Commencer",
         "Spielen",
         "Inizia",
-        "Iniciar",
-        "Начать",
-        "開始",
-        "开始游戏",
-        "시작",
-        "ابدأ",
-        "शुरू करें"
+        "Iniciar"
     ],
 
     "continue": [
@@ -35,13 +23,7 @@
         "Continuer",
         "Fortsetzen",
         "Continua",
-        "Continuar",
-        "Продолжить",
-        "続行",
-        "继续游戏",
-        "계속하기",
-        "استمر",
-        "जारी रखें"
+        "Continuar"
     ],
 
     "pause": [
@@ -50,13 +32,7 @@
         "Pause",
         "Pause",
         "Pausa",
-        "Pausa",
-        "Пауза",
-        "一時停止",
-        "暂停游戏",
-        "일시 중지",
-        "إيقاف مؤقت",
-        "विराम"
+        "Pausa"
     ],
 
     "settings": [
@@ -65,13 +41,7 @@
         "Paramètres",
         "Einstellungen",
         "Impostazioni",
-        "Configurações",
-        "Настройки",
-        "設定",
-        "设置",
-        "설정",
-        "الإعدادات",
-        "सेटिंग्स"
+        "Configurações"
     ],
 
     "options": [
@@ -80,13 +50,7 @@
         "Options",
         "Optionen",
         "Opzioni",
-        "Opções",
-        "Опции",
-        "オプション",
-        "选项",
-        "옵션",
-        "خيارات",
-        "विकल्प"
+        "Opções"
     ],
 
     "exit": [
@@ -95,13 +59,7 @@
         "Quitter",
         "Beenden",
         "Esci",
-        "Sair",
-        "Выход",
-        "終了",
-        "退出",
-        "종료",
-        "خروج",
-        "बाहर निकलें"
+        "Sair"
     ],
 
     "back": [
@@ -110,13 +68,7 @@
         "Retour",
         "Zurück",
         "Indietro",
-        "Voltar",
-        "Назад",
-        "戻る",
-        "返回",
-        "뒤로",
-        "رجوع",
-        "वापस"
+        "Voltar"
     ],
 
     "language": [
@@ -125,13 +77,7 @@
         "Paramètres de Langue",
         "Spracheinstellungen",
         "Impostazioni Lingua",
-        "Configurações de Idioma",
-        "Языковые Настройки",
-        "言語設定",
-        "语言设置",
-        "언어 설정",
-        "إعدادات اللغة",
-        "भाषा सेटिंग्स"
+        "Configurações de Idioma"
     ],
 
     "video_settings": [
@@ -140,29 +86,18 @@
         "Paramètres Vidéo",
         "Videoeinstellungen",
         "Impostazioni Video",
-        "Configurações de Vídeo",
-        "Настройки Видео",
-        "映像設定",
-        "视频设置",
-        "비디오 설정",
-        "إعدادات الفيديو",
-        "वीडियो सेटिंग्स"
+        "Configurações de Vídeo"
     ],
 
-    "audio_settings": [
+    "audio": [
         "Audio Settings",
         "Ajustes de Audio",
         "Paramètres Audio",
         "Audioeinstellungen",
         "Impostazioni Audio",
-        "Configurações de Áudio",
-        "Настройки Звука",
-        "音声設定",
-        "音频设置",
-        "오디오 설정",
-        "إعدادات الصوت",
-        "ऑडियो सेटिंग्स"
+        "Configurações de Áudio"
     ],
+
 
     "gameplay_settings": [
         "Gameplay Settings",
@@ -170,27 +105,21 @@
         "Paramètres de Jeu",
         "Spieleinstellungen",
         "Impostazioni di Gioco",
-        "Configurações de Jogabilidade",
-        "Настройки Игры",
-        "ゲーム設定",
-        "游戏设置",
-        "게임플레이 설정",
-        "إعدادات اللعب",
-        "गेमप्ले सेटिंग्स"
+        "Configurações de Jogabilidade"
     ],
 
-    "english": ["English", "Inglés", "Anglais", "Englisch", "Inglese", "Inglês", "Английский", "英語", "英语", "영어", "الإنجليزية", "अंग्रेजी"],
-    "spanish": ["Spanish", "Español", "Espagnol", "Spanisch", "Spagnolo", "Espanhol", "Испанский", "スペイン語", "西班牙语", "스페인어", "الإسبانية", "स्पैनिश"],
-    "french": ["French", "Francés", "Français", "Französisch", "Francese", "Francês", "Французский", "フランス語", "法语", "프랑스어", "الفرنسية", "फ्रेंच"],
-    "german": ["German", "Alemán", "Allemand", "Deutsch", "Tedesco", "Alemão", "Немецкий", "ドイツ語", "德语", "독일어", "الألمانية", "जर्मन"],
-    "italian": ["Italian", "Italiano", "Italien", "Italienisch", "Italiano", "Italiano", "Итальянский", "イタリア語", "意大利语", "이탈리아어", "الإيطالية", "इटैलियन"],
-    "portuguese": ["Portuguese", "Portugués", "Portugais", "Portugiesisch", "Portoghese", "Português", "Португальский", "ポルトガル語", "葡萄牙语", "포르투갈어", "البرتغالية", "पुर्तगाली"],
-    "russian": ["Russian", "Ruso", "Russe", "Russisch", "Russo", "Russo", "Русский", "ロシア語", "俄语", "러시아어", "الروسية", "रूसी"],
-    "japanese": ["Japanese", "Japonés", "Japonais", "Japanisch", "Giapponese", "Japonês", "Японский", "日本語", "日语", "일본어", "اليابانية", "जापानी"],
-    "chinese": ["Chinese", "Chino", "Chinois", "Chinesisch", "Cinese", "Chinês", "Китайский", "中国語", "中文", "중국어", "الصينية", "चीनी"],
-    "korean": ["Korean", "Coreano", "Coréen", "Koreanisch", "Coreano", "Coreano", "Корейский", "韓国語", "韩语", "한국어", "الكورية", "कोरियन"],
-    "arabic": ["Arabic", "Árabe", "Arabe", "Arabisch", "Arabo", "Árabe", "Арабский", "アラビア語", "阿拉伯语", "아랍어", "العربية", "अरबी"],
-    "hindi": ["Hindi", "Hindi", "Hindi", "Hindi", "Hindi", "Hindi", "Хинди", "ヒンディー語", "印地语", "힌디어", "الهندية", "हिंदी"],
+    "english": ["English", "Inglés", "Anglais", "Englisch", "Inglese", "Inglês"],
+    "spanish": ["Spanish", "Español", "Espagnol", "Spanisch", "Spagnolo", "Espanhol"],
+    "french": ["French", "Francés", "Français", "Französisch", "Francese", "Francês"],
+    "german": ["German", "Alemán", "Allemand", "Deutsch", "Tedesco", "Alemão"],
+    "italian": ["Italian", "Italiano", "Italien", "Italienisch", "Italiano", "Italiano"],
+    "portuguese": ["Portuguese", "Portugués", "Portugais", "Portugiesisch", "Portoghese", "Português"],
+    "russian": ["Russian", "Ruso", "Russe", "Russisch", "Russo", "Russo"],
+    "japanese": ["Japanese", "Japonés", "Japonais", "Japanisch", "Giapponese", "Japonês"],
+    "chinese": ["Chinese", "Chino", "Chinois", "Chinesisch", "Cinese", "Chinês"],
+    "korean": ["Korean", "Coreano", "Coréen", "Koreanisch", "Coreano", "Coreano"],
+    "arabic": ["Arabic", "Árabe", "Arabe", "Arabisch", "Arabo", "Árabe"],
+    "hindi": ["Hindi", "Hindi", "Hindi", "Hindi", "Hindi", "Hindi"],
 
     "resolution": [
         "Resolution",
@@ -198,13 +127,7 @@
         "Résolution",
         "Auflösung",
         "Risoluzione",
-        "Resolução",
-        "Разрешение",
-        "解像度",
-        "分辨率",
-        "해상도",
-        "درجة الوضوح",
-        "रेजोल्यूशन"
+        "Resolução"
     ],
 
     "fullscreen": [
@@ -213,13 +136,7 @@
         "Plein Écran",
         "Vollbild",
         "Schermo Intero",
-        "Tela Cheia",
-        "Полный Экран",
-        "全画面",
-        "全屏",
-        "전체 화면",
-        "ملء الشاشة",
-        "फुल स्क्रीन"
+        "Tela Cheia"
     ],
 
     "vsync": [
@@ -228,13 +145,7 @@
         "Synchronisation Verticale",
         "Vertikale Synchronisation",
         "Sincronizzazione Verticale",
-        "Sincronização Vertical",
-        "Вертикальная Синхронизация",
-        "垂直同期",
-        "垂直同步",
-        "수직 동기화",
-        "المزامنة العمودية",
-        "वर्टिकल सिंक"
+        "Sincronização Vertical"
     ],
 
     "fps_limit": [
@@ -243,13 +154,7 @@
         "Limite de FPS",
         "FPS-Limit",
         "Limite FPS",
-        "Limite de FPS",
-        "Ограничение FPS",
-        "FPS制限",
-        "帧率限制",
-        "FPS 제한",
-        "حد معدل الإطارات",
-        "एफपीएस सीमा"
+        "Limite de FPS"
     ],
 
     "master_volume": [
@@ -258,13 +163,7 @@
         "Volume Principal",
         "Hauptlautstärke",
         "Volume Principale",
-        "Volume Principal",
-        "Общая Громкость",
-        "マスター音量",
-        "主音量",
-        "마스터 볼륨",
-        "مستوى الصوت الرئيسي",
-        "मास्टर वॉल्यूम"
+        "Volume Principal"
     ],
 
     "music_volume": [
@@ -273,13 +172,7 @@
         "Volume de la Musique",
         "Musiklautstärke",
         "Volume Musica",
-        "Volume da Música",
-        "Громкость Музыки",
-        "音楽音量",
-        "音乐音量",
-        "음악 볼륨",
-        "مستوى صوت الموسيقى",
-        "संगीत वॉल्यूम"
+        "Volume da Música"
     ],
 
     "sfx_volume": [
@@ -288,13 +181,16 @@
         "Effets Sonores",
         "Soundeffekte",
         "Effetti Sonori",
-        "Efeitos Sonoros",
-        "Звуковые Эффекты",
-        "効果音",
-        "音效",
-        "효과음",
-        "المؤثرات الصوتية",
-        "ध्वनि प्रभाव"
+        "Efeitos Sonoros"
+    ],
+
+    "env_volume": [
+        "Environment Volume",
+        "Volumen de Ambiente",
+        "Volume de l'Environnement",
+        "Umgebungslautstärke",
+        "Volume Ambiente",
+        "Volume do Ambiente"
     ],
 
     "difficulty": [
@@ -303,13 +199,7 @@
         "Difficulté",
         "Schwierigkeit",
         "Difficoltà",
-        "Dificuldade",
-        "Сложность",
-        "難易度",
-        "难度",
-        "난이도",
-        "مستوى الصعوبة",
-        "कठिनाई"
+        "Dificuldade"
     ],
 
     "tutorial": [
@@ -318,13 +208,7 @@
         "Tutoriel",
         "Tutorial",
         "Tutorial",
-        "Tutorial",
-        "Обучение",
-        "チュートリアル",
-        "教程",
-        "튜토리얼",
-        "البرنامج التعليمي",
-        "ट्यूटोरियल"
+        "Tutorial"
     ],
 
     "subtitles": [
@@ -333,12 +217,6 @@
         "Sous-titres",
         "Untertitel",
         "Sottotitoli",
-        "Legendas",
-        "Субтитры",
-        "字幕",
-        "字幕",
-        "자막",
-        "الترجمات",
-        "उपशीर्षक"
+        "Legendas"
     ]
 }

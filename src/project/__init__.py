@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
-from project.theme.theme import Theme, Themes
+from project.theme.ui import UITheme
 from project.settings import *
 from tools import AssetManager
 
 
 class AppData(BaseModel):
     settings: Settings = Field(default_factory=Settings)
-    current_theme: Theme = Field(default=Themes.DARK.value)
+    # current_theme: UITheme = Field(default=Themes.DARK.value)
 
     class Config:
         arbitrary_types_allowed = True  # it allows the use of arbitrary types in the model
