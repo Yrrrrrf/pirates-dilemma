@@ -136,7 +136,7 @@ class WorldManager(BaseModel):
 
         # Handle keyboard input
         keys = pygame.key.get_pressed()
-        # Update player
+        # self.player.update(dt, keys, self.current_world.get_collision_rects())
         self.player.update(dt, keys)
 
         camera_dx = keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]

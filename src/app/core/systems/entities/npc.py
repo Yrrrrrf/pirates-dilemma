@@ -6,6 +6,7 @@ from pydantic import Field
 from app.core.systems.entities import *
 from app.core.systems.entities.sprites import *
 from tools import AssetManager
+from tools.console import *
 
 class NPCType(Enum):
     # SOME COMMON GUY...
@@ -22,10 +23,9 @@ def get_random_asset() -> str:
     return f"static\\npc\\{gender}{random.randint(1, 2 if gender == "Female" else 4)}.png"
 
 
-
 class NPC(Actor):
     npc_type: NPCType = Field(...)  # Required field
-    name: str = Field(default="Some NPC")
+    name: str = Field(default=None)  # Default None if not provided
     dialogue_keys: List[str] = Field(default_factory=list)  # Default empty list if not provided
     current_dialogue_index: int = Field(default=0)
 
@@ -36,21 +36,12 @@ class NPC(Actor):
     def __init__(self, **data):
         super().__init__(**data)
         self.sprite = AnimatedSprite()
-        self._initialize_random_npc()
-        
-        # Set name based on NPC type if not provided
-        if self.name == "Some NPC":
-            self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
+        self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.sprite = AnimatedSprite()
         self._initialize_random_npc()
 
         self.npc_type = data.get("npc_type", NPCType.CIVILIAN)
 
-        # self.name = f"{self.sprite_sheet_path.split('\\')[-1].split('.')[0].title()}-{random.randint(1, 100):02d}"
-        self.name = f"{self.npc_type.name.title()}-{random.randint(1, 100):02d}"
 
 
     def _initialize_random_npc(self) -> None:
@@ -69,7 +60,8 @@ class NPC(Actor):
             # Set up animations based on direction
             self.sprite.setup_directional_animations()
             
-            print(f"NPC initialized successfully with sprite sheet: {img_path}")
+            # print(f"{self.name} initialized successfully with sprite sheet: {img_path}")
+            print(f"\t\tNew {cyan("NPC")} {self.name}")
             
         except Exception as e:
             print(f"Error initializing NPC: {e}")

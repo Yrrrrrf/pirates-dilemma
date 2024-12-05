@@ -67,10 +67,9 @@ class Engine(BaseModel):
 
     def handle_click(self, event: pygame.event.Event) -> None:
         """Handle mouse click events"""
-        match event.button:
-            case 1: print("Left click")
-            case 2: print("Middle click")
-            case 3: print("Right click")
+        pass
+        # match event.type:
+        #     case pygame.MOUSEBUTTONDOWN:
 
     def run(self) -> None:
         """Main game loop"""

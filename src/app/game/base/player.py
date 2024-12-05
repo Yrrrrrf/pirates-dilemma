@@ -1,24 +1,166 @@
-import os
-from typing import Dict, Optional
+from enum import Enum
+from typing import Dict, Optional, Tuple
 import pygame
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from app.core.engine.camera import Camera
 from app.core.systems.entities import Actor
-from app.core.systems.entities.sprites import AnimatedSprite, AnimationState, Direction
+# todo: Handle this as a same module (mecanics) or something like that...
 from app.game.base.abilities import Ability
 from app.game.base.inventory import Inventory
 from app.game.base.reputation import Reputation
+
 from tools import AssetManager
+from tools.console import *
+
+
+class PlayerState(Enum):
+    IDLE = "idle"
+    WALK = "walk"
+    ATTACK = "attack"
+    PICKUP = "pick up"
+
+class PlayerDirection(Enum):
+    DOWN = "down"
+    UP = "up"
+    SIDE = "side"
+
+class PlayerSprite(BaseModel):
+    """Enhanced sprite system for player character with multiple sprite sheets"""
+    sprite_sheets: Dict[str, Optional[pygame.Surface]] = Field(default_factory=dict)
+    frame_size: Tuple[int, int] = (64, 64)  # Sprite size is 64x64
+    current_state: PlayerState = Field(default=PlayerState.IDLE)
+    current_direction: PlayerDirection = Field(default=PlayerDirection.DOWN)
+    current_frame: int = Field(default=0)
+    animation_speed: float = Field(default=0.1)
+    animation_timer: float = Field(default=0.0)
+    flip_horizontal: bool = Field(default=False)
+    
+    # Frame counts for each animation type
+    frame_counts: Dict[PlayerState, int] = {
+        PlayerState.IDLE: 4,
+        PlayerState.WALK: 4,
+        PlayerState.ATTACK: 3,
+        PlayerState.PICKUP: 4
+    }
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    def load_sprite_sheets(self):
+        """Load all required sprite sheets"""
+        # First load regular directional animations
+        for direction in PlayerDirection:
+            for state in PlayerState:
+                # Skip pickup since it's handled separately
+                if state == PlayerState.PICKUP:
+                    continue
+                
+                sheet_name = f"_{direction.value} {state.value}.png"
+                try:
+                    path = AssetManager.get_image(f"static/main-character/{sheet_name}")
+                    sheet = pygame.image.load(path).convert_alpha()
+                    self.sprite_sheets[f"{direction.value}_{state.value}"] = sheet
+                except Exception as e:
+                    self.sprite_sheets[f"{direction.value}_{state.value}"] = None
+
+        # Load pickup animation separately
+        try:
+            pickup_path = AssetManager.get_image("static/main-character/_pick up.png")
+            pickup_sheet = pygame.image.load(pickup_path).convert_alpha()
+            self.sprite_sheets["pickup"] = pickup_sheet
+        except Exception as e:
+            print(f"Error loading pickup animation: {e}")
+            self.sprite_sheets["pickup"] = None
+
+    def update(self, dt: float):
+        """Update animation frame"""
+        self.animation_timer += dt
+        if self.animation_timer >= self.animation_speed:
+            self.animation_timer = 0
+            max_frames = self.frame_counts[self.current_state]
+            self.current_frame = (self.current_frame + 1) % max_frames
+
+    def get_current_frame(self) -> pygame.Surface:
+        """Get the current animation frame"""
+        # Special handling for pickup animation
+        if self.current_state == PlayerState.PICKUP:
+            sheet = self.sprite_sheets.get("pickup")
+            if sheet is None:
+                return self.create_default_frame()
+            
+            try:
+                frame_x = self.current_frame * self.frame_size[0]
+                frame = sheet.subsurface((frame_x, 0, *self.frame_size))
+                if self.flip_horizontal:
+                    frame = pygame.transform.flip(frame, True, False)
+                return frame
+            except ValueError as e:
+                print(f"Error getting pickup frame: {e}")
+                return self.create_default_frame()
+
+        # Normal handling for other animations
+        sheet_key = f"{self.current_direction.value}_{self.current_state.value}"
+        sheet = self.sprite_sheets.get(sheet_key)
+        
+        if sheet is None:
+            return self.create_default_frame()
+
+        try:
+            frame_x = self.current_frame * self.frame_size[0]
+            frame = sheet.subsurface((frame_x, 0, *self.frame_size))
+            
+            if self.flip_horizontal:
+                frame = pygame.transform.flip(frame, True, False)
+            
+            return frame
+        except ValueError as e:
+            print(f"Error getting frame from sheet {sheet_key}: {e}")
+            return self.create_default_frame()
+
+    def create_default_frame(self) -> pygame.Surface:
+        """Create a default frame for error cases"""
+        surface = pygame.Surface(self.frame_size, pygame.SRCALPHA)
+        surface.fill((255, 0, 0, 128))  # Semi-transparent red
+        pygame.draw.rect(surface, (255, 255, 255), surface.get_rect(), 1)
+        return surface
+
+    def set_state(self, state: PlayerState, direction: PlayerDirection = None):
+        """Set the current animation state and optionally direction"""
+        if state != self.current_state:
+            self.current_state = state
+            self.current_frame = 0
+            self.animation_timer = 0
+        
+        if direction is not None:
+            if direction != self.current_direction:
+                self.current_direction = direction
+                self.current_frame = 0
+                self.animation_timer = 0
+
+    def set_direction(self, dx: float, dy: float):
+        """Set direction based on movement vector"""
+        if dx == 0 and dy == 0:
+            return
+
+
+
+        if abs(dx) > abs(dy):
+            self.current_direction = PlayerDirection.SIDE
+            self.flip_horizontal = dx > 0  # Flip when moving left
+        else:
+            self.current_direction = PlayerDirection.UP if dy < 0 else PlayerDirection.DOWN
+            self.flip_horizontal = False
+
 
 class Player(Actor):
-    sprite_sheet_path: str = Field("static\\player.png")
-    sprite: Optional[AnimatedSprite] = Field(default=None)
-    scale_factor: float = Field(default=3.0)
+    sprite: Optional[PlayerSprite] = Field(default=None)
+    scale_factor: float = Field(default=3.0)  # No scaling needed since sprites are 64x64
     
     reputation: Reputation = Field(default_factory=Reputation)
     inventory: Inventory = Field(default_factory=Inventory)
     abilities: Dict[str, Ability] = Field(default_factory=dict)
+    pickup_cooldown: float = Field(default=0.0)
 
     class Config:
         arbitrary_types_allowed = True
@@ -26,117 +168,72 @@ class Player(Actor):
     def __init__(self, **data):
         super().__init__(**data)
         if self.sprite is None:
-            self.sprite = AnimatedSprite()
-        self.load_sprite_sheet()
-    #     self._initialize_abilities()
+            self.sprite = PlayerSprite()
+        self.load_sprites()
 
-    # def _initialize_abilities(self) -> None:
-    #     """Initialize basic abilities"""
-    #     self.abilities["attack"] = Ability(
-    #         name="attack",
-    #         cooldown=1.0,
-    #         animation_state=AnimationState.ATTACK
-    #     )
-
-    def load_sprite_sheet(self):
+    def load_sprites(self):
+        """Load all player sprite sheets"""
         try:
-            img_path = AssetManager.get_image(self.sprite_sheet_path)
-            if not os.path.exists(img_path):
-                raise FileNotFoundError(f"Image file not found: {img_path}")
-
-            print(f"Image file exists: {img_path}")
-            sprite_sheet = pygame.image.load(img_path).convert_alpha()  # Use convert_alpha() instead of convert()
-
-            if not isinstance(sprite_sheet, pygame.Surface):
-                raise TypeError(f"Loaded object is not a pygame.Surface. Got {type(sprite_sheet)}")
-
-            # Get and print surface information
-            print(f"\tImage size: {sprite_sheet.get_size()}")
-            print(f"\tImage color key: {sprite_sheet.get_colorkey()}")
-            print(f"\tImage alpha: {sprite_sheet.get_alpha()}")
-            print(f"\tImage bit size: {sprite_sheet.get_bitsize()}")
-
-            # Determine frame size and animation layout
-            sheet_width, sheet_height = sprite_sheet.get_size()
-            frame_width = 48  # Assuming each frame is 48x48
-            frame_height = 48
-            cols = sheet_width // frame_width
-            rows = sheet_height // frame_height
-
-            self.sprite.sprite_sheet = sprite_sheet
-            self.sprite.frame_size = (frame_width, frame_height)
-            print(f"Frame size: {self.sprite.frame_size}")
-            
-            # Set up animations based on available frames
-            self.sprite.animations = {
-                AnimationState.IDLE: [(i, 0) for i in range(min(3, cols))],
-                AnimationState.MOVE: [(i, 1) for i in range(min(3, cols))],
-                AnimationState.ATTACK: [(i, 2) for i in range(min(3, cols))],
-                AnimationState.DEATH: [(0, 3)]
-            }
-            print("Animations set up successfully")
-            
-        except (pygame.error, FileNotFoundError, TypeError) as e:
-            print(f"Error loading player sprite sheet: {e}")
-            self.create_fallback_sprite()
+            self.sprite.load_sprite_sheets()
         except Exception as e:
-            print(f"Unexpected error loading player sprite sheet: {e}")
-            self.create_fallback_sprite()
-
-    def create_fallback_sprite(self):
-        """Create a basic fallback sprite if loading fails"""
-        self.sprite.sprite_sheet = pygame.Surface((48, 48), pygame.SRCALPHA)  # Add SRCALPHA flag
-        self.sprite.sprite_sheet.fill((255, 0, 0, 128))  # Add alpha value
-        self.sprite.frame_size = (48, 48)
-        self.sprite.animations = {
-            state: [(0, 0)] for state in AnimationState
-        }
+            print(f"Error loading player sprites: {e}")
 
     def update(self, dt: float, keys: pygame.key.ScancodeWrapper) -> None:
+        if not self.sprite: return
         # Movement
         dx = keys[pygame.K_d] - keys[pygame.K_a]
         dy = keys[pygame.K_s] - keys[pygame.K_w]
         
+        # Normalize diagonal movement
+        if dx != 0 and dy != 0:
+            # Normalize by dividing by √2
+            dx *= 0.7071  # ≈ 1/√2
+            dy *= 0.7071  # ≈ 1/√2
+
+        # Update sprite state and direction
         if dx != 0 or dy != 0:
-            self.sprite.current_state = AnimationState.MOVE
-            self.sprite.direction = Direction.RIGHT if dx > 0 else Direction.LEFT
+            self.sprite.set_state(PlayerState.WALK)
+            self.sprite.set_direction(dx, dy)
         else:
-            self.sprite.current_state = AnimationState.IDLE
+            self.sprite.set_state(PlayerState.IDLE)
 
-        # Abilities
-        if keys[pygame.K_SPACE]: self.use_ability("attack")
 
+        # Handle actions
+        if keys[pygame.K_SPACE]:
+            self.sprite.set_state(PlayerState.ATTACK)
+        elif keys[pygame.K_e]:
+            self.sprite.set_state(PlayerState.PICKUP)
+
+        # Move character
         self.move(dx, dy, dt)
+        
+        # Update animation
         self.sprite.update(dt)
         
-        # Update ability cooldowns
+        # Update abilities
         for ability in self.abilities.values():
             ability.update(dt)
 
     def draw(self, surface: pygame.Surface, camera: Camera) -> None:
-        if not self.sprite or not self.sprite.sprite_sheet:
+        if not self.sprite:
             return
-            
+                
         current_frame = self.sprite.get_current_frame()
+        
+        # Scale the frame
         scaled_size = (
-            int(current_frame.get_width() * self.scale_factor),
-            int(current_frame.get_height() * self.scale_factor)
+            int(self.sprite.frame_size[0] * self.scale_factor),
+            int(self.sprite.frame_size[1] * self.scale_factor)
         )
         scaled_frame = pygame.transform.scale(current_frame, scaled_size)
         
+        # Convert world position to screen position
         screen_pos = camera.world_to_screen(self.position)
-        draw_pos = (screen_pos[0] - scaled_size[0] // 2, screen_pos[1] - scaled_size[1] // 2)
+        
+        # Center the scaled sprite
+        draw_pos = (
+            screen_pos[0] - scaled_size[0] // 2,
+            screen_pos[1] - scaled_size[1] // 2
+        )
+        
         surface.blit(scaled_frame, draw_pos)
-
-    def use_ability(self, ability_name: str) -> bool:
-        """Use a named ability if it's available"""
-        if ability_name not in self.abilities:
-            return False
-
-        ability = self.abilities[ability_name]
-        if ability.is_ready():
-            # todo: Change the current asset to the ability's animation...
-            ability.trigger()
-            return True
-            
-        return False

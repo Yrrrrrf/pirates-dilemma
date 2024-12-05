@@ -17,6 +17,7 @@ blue = lambda text: f"\033[34m{text}\033[0m"
 magenta = lambda text: f"\033[35m{text}\033[0m"
 cyan = lambda text: f"\033[36m{text}\033[0m"
 white = lambda text: f"\033[37m{text}\033[0m"
+gray = lambda text: f"\033[90m{text}\033[0m"
 
 # background colors
 bg_black = lambda text: f"\033[40m{text}\033[0m"
