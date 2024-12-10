@@ -1,169 +1,322 @@
 {
     "merchant-01": [
         "Welcome to my humble shop, traveler!",
-        "¡Bienvenido a mi humilde tienda, viajero!"
+        "¡Bienvenido a mi humilde tienda, viajero!",
+        "Bienvenue dans ma modeste boutique, voyageur!",
+        "Willkommen in meinem bescheidenen Laden, Reisender!",
+        "Benvenuto nel mio umile negozio, viaggiatore!",
+        "Bem-vindo à minha humilde loja, viajante!"
     ],
     "merchant-02": [
         "I've got rare items from distant lands. Would you like to see my wares?",
-        "Tengo artículos raros de tierras lejanas. ¿Te gustaría ver mis mercancías?"
+        "Tengo artículos raros de tierras lejanas. ¿Te gustaría ver mis mercancías?",
+        "J'ai des objets rares de terres lointaines. Voulez-vous voir mes marchandises?",
+        "Ich habe seltene Gegenstände aus fernen Ländern. Möchten Sie meine Waren sehen?",
+        "Ho oggetti rari da terre lontane. Vuoi vedere la mia merce?",
+        "Tenho itens raros de terras distantes. Gostaria de ver minhas mercadorias?"
     ],
     "merchant-03": [
         "My prices are fair, and my goods are genuine. I guarantee it!",
-        "Mis precios son justos y mis productos son genuinos. ¡Lo garantizo!"
+        "Mis precios son justos y mis productos son genuinos. ¡Lo garantizo!",
+        "Mes prix sont justes et mes produits sont authentiques. Je le garantis!",
+        "Meine Preise sind fair und meine Waren sind echt. Ich garantiere es!",
+        "I miei prezzi sono onesti e la mia merce è autentica. Lo garantisco!",
+        "Meus preços são justos e minhas mercadorias são genuínas. Eu garanto!"
     ],
     "merchant-04": [
         "I recently acquired some exotic spices from the eastern islands...",
-        "Recientemente adquirí algunas especias exóticas de las islas orientales..."
+        "Recientemente adquirí algunas especias exóticas de las islas orientales...",
+        "J'ai récemment acquis des épices exotiques des îles orientales...",
+        "Ich habe kürzlich einige exotische Gewürze von den östlichen Inseln erworben...",
+        "Ho recentemente acquisito alcune spezie esotiche dalle isole orientali...",
+        "Recentemente adquiri algumas especiarias exóticas das ilhas orientais..."
     ],
     "merchant-05": [
         "Be careful with those pirates lurking around the coast these days.",
-        "Ten cuidado con esos piratas que merodean por la costa estos días."
+        "Ten cuidado con esos piratas que merodean por la costa estos días.",
+        "Méfiez-vous des pirates qui rôdent autour de la côte ces jours-ci.",
+        "Seien Sie vorsichtig mit den Piraten, die dieser Tage an der Küste lauern.",
+        "Fai attenzione a quei pirati che si aggirano intorno alla costa in questi giorni.",
+        "Tenha cuidado com aqueles piratas à espreita pela costa nesses dias."
     ],
-    
     "harbor-01": [
         "Greetings, I'm the harbor master of this port.",
-        "Saludos, soy el maestro del puerto."
+        "Saludos, soy el maestro del puerto.",
+        "Salutations, je suis le maître du port.",
+        "Grüße, ich bin der Hafenmeister dieses Hafens.",
+        "Saluti, sono il capitano del porto.",
+        "Saudações, sou o mestre do porto."
     ],
     "harbor-02": [
         "Make sure your ship's papers are in order before docking.",
-        "Asegúrate de que los papeles de tu barco estén en orden antes de atracar."
+        "Asegúrate de que los papeles de tu barco estén en orden antes de atracar.",
+        "Assurez-vous que les papiers de votre navire sont en règle avant d'accoster.",
+        "Stellen Sie sicher, dass Ihre Schiffspapiere vor dem Anlegen in Ordnung sind.",
+        "Assicurati che i documenti della tua nave siano in ordine prima dell'attracco.",
+        "Certifique-se de que os documentos do seu navio estejam em ordem antes de atracar."
     ],
     "harbor-03": [
         "The weather's looking favorable for sailing today.",
-        "El clima se ve favorable para navegar hoy."
+        "El clima se ve favorable para navegar hoy.",
+        "Le temps semble favorable à la navigation aujourd'hui.",
+        "Das Wetter sieht heute günstig zum Segeln aus.",
+        "Il tempo sembra favorevole per navigare oggi.",
+        "O tempo está favorável para navegar hoje."
     ],
     "harbor-04": [
         "We've had reports of suspicious activity near the reef.",
-        "Hemos tenido informes de actividad sospechosa cerca del arrecife."
+        "Hemos tenido informes de actividad sospechosa cerca del arrecife.",
+        "Nous avons eu des rapports d'activité suspecte près du récif.",
+        "Wir haben Berichte über verdächtige Aktivitäten in der Nähe des Riffs.",
+        "Abbiamo ricevuto segnalazioni di attività sospette vicino alla barriera corallina.",
+        "Tivemos relatos de atividade suspeita perto do recife."
     ],
     "harbor-05": [
         "Remember to pay your docking fees before departing!",
-        "¡Recuerda pagar tus tarifas de atraque antes de partir!"
+        "¡Recuerda pagar tus tarifas de atraque antes de partir!",
+        "N'oubliez pas de payer vos frais d'amarrage avant de partir!",
+        "Vergessen Sie nicht, Ihre Liegegebühren vor der Abreise zu bezahlen!",
+        "Ricordati di pagare le tasse di attracco prima di partire!",
+        "Lembre-se de pagar suas taxas de atracação antes de partir!"
     ],
-
     "tavern-01": [
         "Welcome to the Salty Seadog Tavern!",
-        "¡Bienvenido a la Taberna del Perro Marino!"
+        "¡Bienvenido a la Taberna del Perro Marino!",
+        "Bienvenue à la Taverne du Chien de Mer Salé!",
+        "Willkommen in der Salzigen Seehund Taverne!",
+        "Benvenuto alla Taverna del Cane Marino Salato!",
+        "Bem-vindo à Taberna do Cão Marinho!"
     ],
     "tavern-02": [
         "You wouldn't believe the stories I hear in this place...",
-        "No creerías las historias que escucho en este lugar..."
+        "No creerías las historias que escucho en este lugar...",
+        "Vous ne croiriez pas les histoires que j'entends ici...",
+        "Sie würden die Geschichten nicht glauben, die ich hier höre...",
+        "Non crederesti alle storie che sento in questo posto...",
+        "Você não acreditaria nas histórias que ouço neste lugar..."
     ],
     "tavern-03": [
         "Word is, there's a treasure map making the rounds.",
-        "Se dice que hay un mapa del tesoro circulando."
+        "Se dice que hay un mapa del tesoro circulando.",
+        "On dit qu'une carte au trésor circule.",
+        "Man sagt, eine Schatzkarte macht die Runde.",
+        "Si dice che ci sia una mappa del tesoro che gira.",
+        "Dizem que há um mapa do tesouro circulando por aí."
     ],
     "tavern-04": [
         "Need a room for the night? Just 5 gold pieces.",
-        "¿Necesitas una habitación para la noche? Solo 5 piezas de oro."
+        "¿Necesitas una habitación para la noche? Solo 5 piezas de oro.",
+        "Besoin d'une chambre pour la nuit? Seulement 5 pièces d'or.",
+        "Brauchen Sie ein Zimmer für die Nacht? Nur 5 Goldstücke.",
+        "Ti serve una stanza per la notte? Solo 5 monete d'oro.",
+        "Precisa de um quarto para a noite? Apenas 5 moedas de ouro."
     ],
     "tavern-05": [
         "Watch yourself - some unsavory characters about lately.",
-        "Cuídate - hay algunos personajes desagradables últimamente."
+        "Cuídate - hay algunos personajes desagradables últimamente.",
+        "Faites attention - il y a des personnages peu recommandables ces derniers temps.",
+        "Passen Sie auf - in letzter Zeit gibt es einige zwielichtige Gestalten.",
+        "Stai attento - ultimamente ci sono dei personaggi poco raccomandabili.",
+        "Cuidado - alguns personagens desagradáveis por aqui ultimamente."
     ],
-
     "wanderer-01": [
         "Psst... interested in some special merchandise?",
-        "Psst... ¿interesado en alguna mercancía especial?"
+        "Psst... ¿interesado en alguna mercancía especial?",
+        "Psst... intéressé par quelques marchandises spéciales?",
+        "Psst... interessiert an spezieller Ware?",
+        "Psst... interessato a della merce speciale?",
+        "Psst... interessado em algumas mercadorias especiais?"
     ],
     "wanderer-02": [
         "These items aren't easy to come by, if you know what I mean.",
-        "Estos artículos no son fáciles de conseguir, si sabes a lo que me refiero."
+        "Estos artículos no son fáciles de conseguir, si sabes a lo que me refiero.",
+        "Ces objets ne sont pas faciles à trouver, si vous voyez ce que je veux dire.",
+        "Diese Gegenstände sind nicht leicht zu bekommen, wenn Sie verstehen, was ich meine.",
+        "Questi oggetti non sono facili da trovare, se capisci cosa intendo.",
+        "Estes itens não são fáceis de conseguir, se é que me entende."
     ],
     "wanderer-03": [
         "I can offer you a special price, just don't ask where they came from.",
-        "Puedo ofrecerte un precio especial, solo no preguntes de dónde vienen."
+        "Puedo ofrecerte un precio especial, solo no preguntes de dónde vienen.",
+        "Je peux vous faire un prix spécial, ne demandez juste pas d'où ils viennent.",
+        "Ich kann Ihnen einen Sonderpreis machen, fragen Sie nur nicht, woher sie kommen.",
+        "Posso farti un prezzo speciale, solo non chiedere da dove vengono.",
+        "Posso te oferecer um preço especial, só não pergunte de onde eles vieram."
     ],
     "wanderer-04": [
         "Everything's authentic, I assure you... mostly.",
-        "Todo es auténtico, te lo aseguro... en su mayoría."
+        "Todo es auténtico, te lo aseguro... en su mayoría.",
+        "Tout est authentique, je vous assure... en grande partie.",
+        "Alles ist authentisch, das versichere ich Ihnen... größtenteils.",
+        "Tutto è autentico, te lo assicuro... più o meno.",
+        "Tudo é autêntico, eu garanto... na maior parte."
     ],
     "wanderer-05": [
         "Come back later, I might have new stock by then.",
-        "Vuelve más tarde, podría tener nuevo stock para entonces."
+        "Vuelve más tarde, podría tener nuevo stock para entonces.",
+        "Revenez plus tard, j'aurai peut-être de nouveaux articles d'ici là.",
+        "Kommen Sie später wieder, bis dahin habe ich vielleicht neue Ware.",
+        "Torna più tardi, potrei avere nuova merce per allora.",
+        "Volte mais tarde, posso ter novo estoque até lá."
     ],
-
     "fisher-01": [
         "The fishing's been good lately, praise the tides!",
-        "¡La pesca ha estado bien últimamente, alabados sean los mares!"
+        "¡La pesca ha estado bien últimamente, alabados sean los mares!",
+        "La pêche a été bonne dernièrement, louées soient les marées!",
+        "Der Fischfang war gut in letzter Zeit, gelobt seien die Gezeiten!",
+        "La pesca è stata buona ultimamente, sia lodata la marea!",
+        "A pesca tem sido boa ultimamente, louvadas sejam as marés!"
     ],
     "fisher-02": [
         "Saw something strange in the waters this morning...",
-        "Vi algo extraño en las aguas esta mañana..."
+        "Vi algo extraño en las aguas esta mañana...",
+        "J'ai vu quelque chose d'étrange dans les eaux ce matin...",
+        "Ich sah heute Morgen etwas Seltsames im Wasser...",
+        "Ho visto qualcosa di strano nelle acque questa mattina...",
+        "Vi algo estranho nas águas esta manhã..."
     ],
     "fisher-03": [
         "Been fishing these waters for thirty years, I have.",
-        "He estado pescando en estas aguas durante treinta años."
+        "He estado pescando en estas aguas durante treinta años.",
+        "Ça fait trente ans que je pêche dans ces eaux.",
+        "Ich fische seit dreißig Jahren in diesen Gewässern.",
+        "Pesco in queste acque da trent'anni.",
+        "Tenho pescado nestas águas por trinta anos."
     ],
     "fisher-04": [
         "Watch out for the reef during low tide.",
-        "Ten cuidado con el arrecife durante la marea baja."
+        "Ten cuidado con el arrecife durante la marea baja.",
+        "Attention au récif pendant la marée basse.",
+        "Achten Sie bei Ebbe auf das Riff.",
+        "Fai attenzione alla barriera corallina durante la bassa marea.",
+        "Cuidado com o recife durante a maré baixa."
     ],
     "fisher-05": [
         "Care to buy some fresh catch?",
-        "¿Te interesa comprar pescado fresco?"
+        "¿Te interesa comprar pescado fresco?",
+        "Voulez-vous acheter du poisson frais?",
+        "Möchten Sie frischen Fang kaufen?",
+        "Ti interessa comprare del pesce fresco?",
+        "Quer comprar peixe fresco?"
     ],
-
     "carpenter-01": [
         "Need repairs? You've come to the right place!",
-        "¿Necesitas reparaciones? ¡Has venido al lugar correcto!"
+        "¿Necesitas reparaciones? ¡Has venido al lugar correcto!",
+        "Besoin de réparations? Vous êtes au bon endroit!",
+        "Reparaturen nötig? Sie sind hier genau richtig!",
+        "Hai bisogno di riparazioni? Sei nel posto giusto!",
+        "Precisa de reparos? Você veio ao lugar certo!"
     ],
     "carpenter-02": [
         "That's quite a bit of damage to your hull there...",
-        "Eso es bastante daño en tu casco..."
+        "Eso es bastante daño en tu casco...",
+        "C'est pas mal de dégâts sur votre coque...",
+        "Das ist ziemlich viel Schaden an Ihrem Rumpf...",
+        "C'è parecchio danno al tuo scafo...",
+        "Isso é bastante dano no seu casco..."
     ],
     "carpenter-03": [
         "I can fix anything that floats, for the right price.",
-        "Puedo arreglar cualquier cosa que flote, por el precio correcto."
+        "Puedo arreglar cualquier cosa que flote, por el precio correcto.",
+        "Je peux réparer tout ce qui flotte, pour le bon prix.",
+        "Ich kann alles reparieren, was schwimmt, zum richtigen Preis.",
+        "Posso riparare qualsiasi cosa che galleggi, per il giusto prezzo.",
+        "Posso consertar qualquer coisa que flutue, pelo preço certo."
     ],
-    "carpenter-04": [
+            "carpenter-04": [
         "Quality workmanship takes time, but it's worth the wait.",
-        "El trabajo de calidad lleva tiempo, pero vale la espera."
+        "El trabajo de calidad lleva tiempo, pero vale la espera.",
+        "Un travail de qualité prend du temps, mais ça vaut l'attente.",
+        "Qualitätsarbeit braucht Zeit, aber das Warten lohnt sich.",
+        "Il lavoro di qualità richiede tempo, ma ne vale l'attesa.",
+        "Trabalho de qualidade leva tempo, mas vale a espera."
     ],
     "carpenter-05": [
         "Make sure to waterproof those planks properly.",
-        "Asegúrate de impermeabilizar bien esas tablas."
+        "Asegúrate de impermeabilizar bien esas tablas.",
+        "Assurez-vous d'imperméabiliser correctement ces planches.",
+        "Achten Sie darauf, diese Planken richtig wasserdicht zu machen.",
+        "Assicurati di impermeabilizzare bene quelle assi.",
+        "Certifique-se de impermeabilizar essas tábuas adequadamente."
     ],
-
     "stranger-01": [
         "You seem like someone who can keep a secret...",
-        "Pareces alguien que puede guardar un secreto..."
+        "Pareces alguien que puede guardar un secreto...",
+        "Vous semblez être quelqu'un qui sait garder un secret...",
+        "Sie scheinen jemand zu sein, der ein Geheimnis bewahren kann...",
+        "Sembri qualcuno che sa mantenere un segreto...",
+        "Você parece alguém que pode guardar um segredo..."
     ],
     "stranger-02": [
         "I might have information that would interest you.",
-        "Podría tener información que te interese."
+        "Podría tener información que te interese.",
+        "J'ai peut-être des informations qui pourraient vous intéresser.",
+        "Ich könnte Informationen haben, die Sie interessieren würden.",
+        "Potrei avere delle informazioni che ti interesserebbero.",
+        "Posso ter informações que interessariam você."
     ],
     "stranger-03": [
         "Have you heard about the ghost ship sightings?",
-        "¿Has oído hablar sobre los avistamientos del barco fantasma?"
+        "¿Has oído hablar sobre los avistamientos del barco fantasma?",
+        "Avez-vous entendu parler des apparitions du vaisseau fantôme?",
+        "Haben Sie von den Geisterschiff-Sichtungen gehört?",
+        "Hai sentito parlare degli avvistamenti della nave fantasma?",
+        "Você ouviu falar sobre os avistamentos do navio fantasma?"
     ],
     "stranger-04": [
         "Not everything is as it seems in this port.",
-        "No todo es lo que parece en este puerto."
+        "No todo es lo que parece en este puerto.",
+        "Tout n'est pas ce qu'il semble être dans ce port.",
+        "Nicht alles ist so, wie es in diesem Hafen scheint.",
+        "Non tutto è come sembra in questo porto.",
+        "Nem tudo é o que parece neste porto."
     ],
     "stranger-05": [
         "We shouldn't talk here... too many eyes and ears.",
-        "No deberíamos hablar aquí... hay demasiados ojos y oídos."
+        "No deberíamos hablar aquí... hay demasiados ojos y oídos.",
+        "Nous ne devrions pas parler ici... trop d'yeux et d'oreilles.",
+        "Wir sollten hier nicht reden... zu viele Augen und Ohren.",
+        "Non dovremmo parlare qui... troppi occhi e orecchie.",
+        "Não deveríamos falar aqui... muitos olhos e ouvidos."
     ],
-
     "guard-01": [
         "Keep moving, and stay out of trouble.",
-        "Sigue moviéndote y mantente alejado de los problemas."
+        "Sigue moviéndote y mantente alejado de los problemas.",
+        "Continuez votre chemin et évitez les ennuis.",
+        "Gehen Sie weiter und bleiben Sie aus Schwierigkeiten raus.",
+        "Continua a muoverti e stai lontano dai guai.",
+        "Continue andando e fique longe de problemas."
     ],
     "guard-02": [
         "We're keeping a close eye on suspicious characters.",
-        "Estamos vigilando de cerca a los personajes sospechosos."
+        "Estamos vigilando de cerca a los personajes sospechosos.",
+        "Nous surveillons de près les personnages suspects.",
+        "Wir behalten verdächtige Personen genau im Auge.",
+        "Teniamo d'occhio i personaggi sospetti.",
+        "Estamos de olho em personagens suspeitos."
     ],
     "guard-03": [
         "Report any pirate activity immediately.",
-        "Reporta cualquier actividad pirata inmediatamente."
+        "Reporta cualquier actividad pirata inmediatamente.",
+        "Signalez immédiatement toute activité pirate.",
+        "Melden Sie jegliche Piratenaktivität sofort.",
+        "Segnala immediatamente qualsiasi attività pirata.",
+        "Reporte qualquer atividade pirata imediatamente."
     ],
     "guard-04": [
         "The governor has increased patrols lately.",
-        "El gobernador ha aumentado las patrullas últimamente."
+        "El gobernador ha aumentado las patrullas últimamente.",
+        "Le gouverneur a augmenté les patrouilles dernièrement.",
+        "Der Gouverneur hat die Patrouillen in letzter Zeit verstärkt.",
+        "Il governatore ha aumentato le pattuglie ultimamente.",
+        "O governador aumentou as patrulhas ultimamente."
     ],
     "guard-05": [
         "Mind the curfew after sundown.",
-        "Respeta el toque de queda después del atardecer."
+        "Respeta el toque de queda después del atardecer.",
+        "Respectez le couvre-feu après le coucher du soleil.",
+        "Beachten Sie die Ausgangssperre nach Sonnenuntergang.",
+        "Rispetta il coprifuoco dopo il tramonto.",
+        "Respeite o toque de recolher após o pôr do sol."
     ]
 }

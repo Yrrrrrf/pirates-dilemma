@@ -326,10 +326,28 @@ class EnhancedDialogueSystem(DialogueSystem):
                     print(f"Successfully stole from {self.current_npc.name}")
                 else:
                     print(f"Failed to steal from {self.current_npc.name}")
-        
+
         # Close the dialogue and menu
         self.active = False
         self.menu_active = False
+        self.current_npc = None
+
+    def show_interaction_menu(self) -> None:
+        """Show interaction menu after dialogue"""
+        if not self.current_npc:
+            return
+
+        self.menu_active = True
+        self.menu.options.clear()
+
+        # Create menu options with proper callbacks
+        for interaction in self._get_npc_interactions(self.current_npc.npc_type):
+            callback = lambda i=interaction: self._handle_interaction(i)
+            self.menu.options.append(DialogueMenuOption(
+                text=interaction.value,
+                interaction_type=interaction,
+                callback=callback
+            ))
 
     def update(self, dt: float, player_pos: Vector2, npc_pos: Vector2) -> None:
         """Update dialogue and menu state"""
@@ -343,7 +361,7 @@ class EnhancedDialogueSystem(DialogueSystem):
         pass
 
     def draw(self, surface: Surface) -> None:
-        """Draw dialogue box and integrated menu"""
+        """Draw dialogue box and integrated menu    """
         if not self.active:
             return
 

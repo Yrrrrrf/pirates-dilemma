@@ -123,3 +123,12 @@ class DialogueMenu(BaseModel):
             text_surface.set_alpha(alpha)
             text_rect = text_surface.get_rect(center=option_rect.center)
             surface.blit(text_surface, text_rect)
+
+    def handle_click(self, pos: Tuple[int, int]) -> None:
+        """Handle mouse clicks on menu options"""
+        for option in self.options:
+            if option.rect and option.rect.collidepoint(pos):
+                if option.callback:
+                    option.callback()
+                    return True  # Indicate click was handled
+        return False

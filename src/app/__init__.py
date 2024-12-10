@@ -95,7 +95,7 @@ class App(BaseModel):
                 self.menu.handle_click(pos)
                 self.menu.handle_mousemotion(pos)
                 self.menu.handle_mouseup(pos)
-            case State.PLAYING: self.engine.handle_click(pos)
+            case State.PLAYING: self.engine.handle_click(event)
 
     # def handle_hover(self, event: pygame.event.Event) -> None:
     #     pos = event.pos

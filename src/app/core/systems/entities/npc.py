@@ -42,8 +42,6 @@ class NPC(Actor):
 
         self.npc_type = data.get("npc_type", NPCType.CIVILIAN)
 
-
-
     def _initialize_random_npc(self) -> None:
         """Initialize NPC with random appearance from available types"""
         try:
@@ -102,4 +100,3 @@ class NPC(Actor):
         )
         
         surface.blit(scaled_frame, draw_pos)
-

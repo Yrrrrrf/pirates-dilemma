@@ -114,16 +114,16 @@ class NPCManager(BaseModel):
     def _add_test_npcs(self) -> None:
         """Add test NPCs with their dialogue keys"""
         test_npcs = [
-            NPC(position=Vector2(400, 300),
+            NPC(position=Vector2(780, 100),
                 npc_type=NPCType.MERCHANT,
                 dialogue_keys=[f"merchant-{i:02d}" for i in range(1, 6)]),
-            NPC(position=Vector2(150, 240),
+            NPC(position=Vector2(315, 100),
                 npc_type=NPCType.HARBOR_MASTER,
                 dialogue_keys=[f"harbor-{i:02d}" for i in range(1, 6)]),
-            NPC(position=Vector2(600, 400),
+            NPC(position=Vector2(190, 510),
                 npc_type=NPCType.TAVERN_KEEPER,
                 dialogue_keys=[f"tavern-{i:02d}" for i in range(1, 6)]),
-            NPC(position=Vector2(200, 500),
+            NPC(position=Vector2(890, 510),
                 npc_type=NPCType.WANDERING_MERCHANT,
                 dialogue_keys=[f"wanderer-{i:02d}" for i in range(1, 6)])
         ]

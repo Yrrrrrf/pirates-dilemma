@@ -29,8 +29,8 @@ class Engine(BaseModel):
         self.display_surface = surface
 
         self.world_manager = WorldManager()
-        self.world_manager.create_world("main", 'big-map.tmx')
         # self.world_manager.create_world("main", 'main-map.tmx')
+        self.world_manager.create_world("main", 'main-copy.tmx')
         # Initialize any required systems here
         def init_systems():
             # * init audio system
@@ -90,6 +90,23 @@ class Engine(BaseModel):
             npc_manager = self.world_manager.npc_manager
             if npc_manager.dialogue_system.active and npc_manager.dialogue_system.menu_active:
                 npc_manager.dialogue_system.handle_input(event)
+
+        match event.button:
+            case 1:  # Left click
+                # First check if dialogue system is active
+                if (self.world_manager.npc_manager and 
+                    self.world_manager.npc_manager.dialogue_system.active):
+                    if self.world_manager.npc_manager.dialogue_system.menu_active:
+                        # Handle menu clicks
+                        self.world_manager.npc_manager.dialogue_system.menu.handle_click(event.pos)
+                        return
+                
+                # If no dialogue is active, handle inventory clicks
+                self.world_manager.player.inventory.handle_click(event.pos)
+            
+            case 2: print("Middle mouse button click")
+            case 3: print("Right mouse button click")
+
 
     def run(self) -> None:
         """Main game loop"""
