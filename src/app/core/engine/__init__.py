@@ -29,7 +29,8 @@ class Engine(BaseModel):
         self.display_surface = surface
 
         self.world_manager = WorldManager()
-        self.world_manager.create_world("main", 'big-map.tmx')
+        self.world_manager.create_world("main", 'some-copy.tmx')
+        #self.world_manager.create_world("main", 'big-map.tmx')
         # self.world_manager.create_world("main", 'main-map.tmx')
         # Initialize any required systems here
         def init_systems():
